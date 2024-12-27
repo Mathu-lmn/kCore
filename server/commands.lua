@@ -1,10 +1,9 @@
 
 RegisterCommand('addmoney', function(source, args)
+    local playerId = tonumber(args[1])
+    local amount = tonumber(args[2])
+    local type = args[3]
     if source == 0 then
-        local playerId = tonumber(args[1])
-        local amount = tonumber(args[2])
-        local type = args[3]
-        
         if not playerId or not amount or not type then
             print("^1Usage: addmoney [playerID] [amount] [cash/bank]^7")
             return
@@ -16,10 +15,6 @@ RegisterCommand('addmoney', function(source, args)
             print("^1Failed to add money. Player might not exist or invalid type specified.^7")
         end
     else
-        local playerId = tonumber(args[1])
-        local amount = tonumber(args[2])
-        local type = args[3]
-        
         if not playerId or not amount or not type then
             TriggerClientEvent('chat:addMessage', source, {
                 color = {255, 0, 0},
@@ -43,26 +38,21 @@ RegisterCommand('addmoney', function(source, args)
 end, false)
 
 RegisterCommand('removemoney', function(source, args)
+    local playerId = tonumber(args[1])
+    local amount = tonumber(args[2])
+    local type = args[3]
     if source == 0 then
-        local playerId = tonumber(args[1])
-        local amount = tonumber(args[2])
-        local type = args[3]
-        
         if not playerId or not amount or not type then
             print("^1Usage: removemoney [playerID] [amount] [cash/bank]^7")
             return
         end
         
-        if RemoveMoney(playerId, amount, type) then
+        if Core.Functions.RemoveMoney(playerId, amount, type) then
             print("^2Successfully removed $" .. amount .. " from player " .. playerId .. "'s " .. type .. "^7")
         else
             print("^1Failed to remove money. Player might not exist, have insufficient funds, or invalid type specified.^7")
         end
     else
-        local playerId = tonumber(args[1])
-        local amount = tonumber(args[2])
-        local type = args[3]
-        
         if not playerId or not amount or not type then
             TriggerClientEvent('chat:addMessage', source, {
                 color = {255, 0, 0},
@@ -71,7 +61,7 @@ RegisterCommand('removemoney', function(source, args)
             return
         end
         
-        if RemoveMoney(playerId, amount, type) then
+        if Core.Functions.RemoveMoney(playerId, amount, type) then
             TriggerClientEvent('chat:addMessage', source, {
                 color = {0, 255, 0},
                 args = {"SYSTEM", "Removed $" .. amount .. " from player " .. playerId .. "'s " .. type}
@@ -80,6 +70,44 @@ RegisterCommand('removemoney', function(source, args)
             TriggerClientEvent('chat:addMessage', source, {
                 color = {255, 0, 0},
                 args = {"SYSTEM", "Failed to remove money. Player might not exist, have insufficient funds, or invalid type specified."}
+            })
+        end
+    end
+end, false)
+
+RegisterCommand('setjob', function(source, args)
+    local playerId = tonumber(args[1])
+    local job = args[2]
+    local grade = tonumber(args[3])
+    if source == 0 then
+        if not playerId or not job or not grade then
+            print("^1Usage: setJob [playerID] [job] [grade]^7")
+            return
+        end
+        
+        if Core.Functions.SetPlayerJob(playerId, job, grade) then
+            print("^2Successfully changed job of player " .. playerId .. " to " .. job .. " grade " .. grade .. "^7")
+        else
+            print("^1Failed to change job. Player might not exist or invalid job/grade specified.^7")
+        end
+    else
+        if not playerId or not amount or not type then
+            TriggerClientEvent('chat:addMessage', source, {
+                color = {255, 0, 0},
+                args = {"SYSTEM", "Usage: /addmoney [playerID] [amount] [cash/bank]"}
+            })
+            return
+        end
+        
+        if Core.Functions.SetPlayerJob(playerId, job, grade) then
+            TriggerClientEvent('chat:addMessage', source, {
+                color = {0, 255, 0},
+                args = {"Successfully changed job of player " .. playerId .. " to " .. job .. " grade " .. grade}
+            })
+        else
+            TriggerClientEvent('chat:addMessage', source, {
+                color = {255, 0, 0},
+                args = {"Failed to change job. Player might not exist or invalid job/grade specified."}
             })
         end
     end

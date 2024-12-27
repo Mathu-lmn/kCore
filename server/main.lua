@@ -68,7 +68,10 @@ function Core.Functions.CreateCharacter(identifier, slot, data, source, cb)
 
     local defaultJob = {
         name = "unemployed",
-        grade = 0
+        label = "Unemployed",
+        grade = 0,
+        grade_label = "Unemployed",
+        salary = 0,
     }
 
     MySQL.Async.execute([[
@@ -162,7 +165,10 @@ function Core.Functions.LoadCharacter(source, citizenid, isNewCharacter)
             }
             self.Job = json.decode(char.job) or { -- fallback
                 name = "unemployed",
-                grade = 0
+                label = "Unemployed",
+                grade = 0,
+                grade_label = "Unemployed",
+                salary = 0,
             }
             if isNewCharacter then
                 self.position = Config.StartingPosition
@@ -206,9 +212,19 @@ function Core.Functions.LoadCharacter(source, citizenid, isNewCharacter)
                     self.Functions.Save()
                 end,
 
-                UpdateJob = function(job)
-                    self.Job = job
+                UpdateJob = function(job, grade)
+                    if not Core.Jobs[job] then
+                        print("^1Error: Job does not exist^7:", job)
+                        return false
+                    end
+
+                    self.Job.name = job
+                    self.Job.grade = grade
+                    self.Job.salary = Core.Jobs[job][grade].salary
+                    self.Job.grade_label = Core.Jobs[job][grade].label
                     self.Functions.Save()
+                
+                    return true
                 end,
                 
                 UpdateAppearance = function(AppearanceData)
@@ -359,6 +375,74 @@ function Core.Functions.UpdatePlayerAppearance(source, AppearanceData)
     return false
 end
 
+function Core.Functions.SetPlayerJob(source, job, grade)
+    local Player = Core.Functions.GetPlayer(source)
+    if not Player then
+        return false
+    end
+
+    if not Core.Jobs[job] then
+        print("^1Error: Job does not exist^7:", job, grade)
+        return false
+    end
+
+    if not Core.Jobs[job].grades[grade] then
+        print("^1Error: Job grade does not exist^7:", job, grade)
+        return false
+    end
+
+    Player.Job.name = job
+    Player.Job.grade = grade
+    Player.Job.salary = Core.Jobs[job].grades[grade].salary
+    Player.Job.grade_label = Core.Jobs[job].grades[grade].label
+
+    Player.Functions.Save()
+
+    return true
+end
+
+exports('SetPlayerJob', Core.Functions.SetPlayerJob)
+
+function Core.Functions.GetPlayerJob(source)
+    local Player = Core.Functions.GetPlayer(source)
+    if not Player then
+        return false
+    end
+
+    return Player.Job
+end
+
+exports('GetPlayerJob', Core.Functions.GetPlayerJob)
+
+function Core.Functions.GetAllJobs()
+    return Core.Jobs
+end
+
+exports('GetAllJobs', Core.Functions.GetAllJobs)
+
+function Core.Functions.ReloadJobs() -- load all jobs to cache
+    Core.Jobs = {}
+    local jobs = MySQL.query.await("SELECT * FROM jobs")
+    for _, v in pairs(jobs) do
+        local jobData = {
+            name = v.name,
+            label = v.label,
+            grades = {}
+        }
+        local grades = MySQL.query.await("SELECT * FROM job_grades WHERE job_name = ?", {v.name})
+        for _, g in pairs(grades) do
+            jobData.grades[g.grade] = {
+                grade = g.grade, -- double to make looping through jobs more comfortable
+                label = g.label,
+                salary = g.salary
+            }
+        end
+
+        Core.Jobs[v.name] = jobData
+    end
+end
+
+exports("ReloadJobs", Core.Functions.ReloadJobs)
 
 AddEventHandler('playerDropped', function()
     local source = source
@@ -372,4 +456,4 @@ function Core.Functions.IsPlayerInitialized(source)
 end
 
 
-
+Core.Functions.ReloadJobs()

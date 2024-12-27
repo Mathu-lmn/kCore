@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS characters (
     citizenid VARCHAR(50) NOT NULL,
     first_name VARCHAR(50) NOT NULL,
     last_name VARCHAR(50) NOT NULL,
-    job JSON DEFAULT '{"name": "unemployed", "grade": 0}',
+    job JSON DEFAULT '{"name": "unemployed", "grade": 0, "salary": 0, "label": "Unemployed", "grade_label": "Unemployed"}',
     money JSON DEFAULT '{"cash": 0, "bank": 0}',
     position JSON DEFAULT '{
         "x": -269.4,
@@ -41,4 +41,18 @@ CREATE TABLE IF NOT EXISTS character_outfits (
     outfit_data JSON NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (citizenid) REFERENCES characters(citizenid) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS jobs (
+    name VARCHAR(50) NOT NULL PRIMARY KEY,
+    label VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS job_grades (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    job_name VARCHAR(50) NOT NULL,
+    grade INT NOT NULL,
+    name VARCHAR(50) NOT NULL,
+    label VARCHAR(50) NOT NULL,
+    salary INT NOT NULL DEFAULT 0
 );

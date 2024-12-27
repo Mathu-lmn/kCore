@@ -9,3 +9,4 @@ Config.StartingPosition = {
     heading = 325.2877
 }
 Config.MaxCharacterSlots = 3
+Config.PaycheckInterval = 1000 * 60 * 60 -- paycheck interval in ms, nil to disable
