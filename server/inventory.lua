@@ -106,9 +106,7 @@ function Core.Functions.AddItem(source, itemName, amount, metadata)
     return true
 end
 
-exports('AddItem', function(source, itemName, amount, metadata)
-    return Core.Functions.AddItem(source, itemName, amount, metadata)
-end)
+exports('AddItem', Core.Functions.AddItem(source, itemName, amount, metadata))
 
 function Core.Functions.RemoveItem(source, itemName, amount, slot)
     local Player = Core.Functions.GetPlayer(source)
