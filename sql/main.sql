@@ -52,7 +52,6 @@ CREATE TABLE IF NOT EXISTS job_grades (
     id INT AUTO_INCREMENT PRIMARY KEY,
     job_name VARCHAR(50) NOT NULL,
     grade INT NOT NULL,
-    name VARCHAR(50) NOT NULL,
     label VARCHAR(50) NOT NULL,
     salary INT NOT NULL DEFAULT 0
 );
