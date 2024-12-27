@@ -13,7 +13,6 @@ shared_scripts {
     'shared/**/**'
 }
 
--- egg likes to sniff feet
 
 
 
