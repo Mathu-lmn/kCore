@@ -112,6 +112,7 @@ function Core.Functions.GetPlayer(source)
     return player
 end
 
+exports('GetPlayer', Core.Functions.GetPlayer)
 
 local function formatItemData(item, sharedItem)
     return {

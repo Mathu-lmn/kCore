@@ -39,7 +39,7 @@ function Core.Functions.RemoveMoney(source, amount, moneytype)
         return false
     end
     
-    if moneytype == 'cash' then
+    if moneytype == 'cash' or moneytype == 'money' then
         if Player.Money.cash >= amount then
             Player.Money.cash = Player.Money.cash - amount
         else
@@ -105,7 +105,7 @@ function Core.Functions.GetMoney(source, type)
         return false
     end
     
-    if type == 'cash' then
+    if type == 'cash' or type == 'money' then
         return sourcePlayer.Money.cash
     elseif type == 'bank' then
         return sourcePlayer.Money.bank
