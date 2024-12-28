@@ -5,44 +5,47 @@ Core = {
     Shared = Shared
 }
 
-exports('GetCore', function() return Core end) -- kekw
+exports('GetCore', function()
+    return Core
+end) -- kekw
 
 -- WE CAN DO  Core = exports["kCore"]:GetCore() (for now, exports will be prio but i've not got round to add every one yet.)
 -- To use all the framework functions/getters in other resources. 
 
 function Core.Functions.GetCharacterSlots(identifier, cb)
-    MySQL.Async.fetchAll('SELECT id, char_slot, citizenid, first_name, last_name, money, job, position, stats, appearance FROM characters WHERE identifier = @identifier', {
-        ['@identifier'] = identifier
-    }, function(results)
-        local slots = {}
-        for i = 1, Config.MaxCharacterSlots do
-            slots[i] = nil
-        end
-        
-        for _, char in ipairs(results) do 
-            slots[char.char_slot] = {
-                id = char.id,
-                citizenid = char.citizenid,
-                Name = {
-                    first_name = char.first_name,
-                    last_name = char.last_name
-                },
-                Stats = json.decode(char.stats),
-                Appearance = json.decode(char.appearance),
-                Money = json.decode(char.money),
-                Job = json.decode(char.job),
-                position = json.decode(char.position)
-            }
-        end
+    MySQL.Async.fetchAll(
+        'SELECT id, char_slot, citizenid, first_name, last_name, money, job, position, stats, appearance FROM characters WHERE identifier = @identifier',
+        {
+            ['@identifier'] = identifier
+        }, function(results)
+            local slots = {}
+            for i = 1, Config.MaxCharacterSlots do
+                slots[i] = nil
+            end
 
-        cb({
-            characters = slots,
-            maxSlots = Config.MaxCharacterSlots
-        })
-    end)
-end exports('GetCharacterSlots', Core.Functions.GetCharacterSlots)
+            for _, char in ipairs(results) do
+                slots[char.char_slot] = {
+                    id = char.id,
+                    citizenid = char.citizenid,
+                    Name = {
+                        first_name = char.first_name,
+                        last_name = char.last_name
+                    },
+                    Stats = json.decode(char.stats),
+                    Appearance = json.decode(char.appearance),
+                    Money = json.decode(char.money),
+                    Job = json.decode(char.job),
+                    position = json.decode(char.position)
+                }
+            end
 
-
+            cb({
+                characters = slots,
+                maxSlots = Config.MaxCharacterSlots
+            })
+        end)
+end
+exports('GetCharacterSlots', Core.Functions.GetCharacterSlots)
 
 function Core.Functions.CreateCharacter(identifier, slot, data, source, cb)
     local citizenid = Core.Functions.GenerateUID()
@@ -71,7 +74,7 @@ function Core.Functions.CreateCharacter(identifier, slot, data, source, cb)
         label = "Unemployed",
         grade = 0,
         grade_label = "Unemployed",
-        salary = 0,
+        salary = 0
     }
 
     MySQL.Async.execute([[
@@ -84,7 +87,10 @@ function Core.Functions.CreateCharacter(identifier, slot, data, source, cb)
         ['@citizenid'] = citizenid,
         ['@firstName'] = data.firstName,
         ['@lastName'] = data.lastName,
-        ['@money'] = json.encode({cash = Config.StartingMoney, bank = Config.StartingBank}),
+        ['@money'] = json.encode({
+            cash = Config.StartingMoney,
+            bank = Config.StartingBank
+        }),
         ['@job'] = json.encode(defaultJob),
         ['@appearance'] = json.encode(defaultAppearance),
         ['@inventory'] = json.encode(defaultInventory)
@@ -97,20 +103,19 @@ function Core.Functions.CreateCharacter(identifier, slot, data, source, cb)
             cb(false)
         end
     end)
-end exports('CreateCharacter', Core.Functions.CreateCharacter)
-
-
+end
+exports('CreateCharacter', Core.Functions.CreateCharacter)
 
 function Core.Functions.GetPlayer(source)
-    if not source then 
-        return nil 
+    if not source then
+        return nil
     end
-    
+
     source = tonumber(source)
-    if not source then 
-        return nil 
+    if not source then
+        return nil
     end
-    
+
     local player = Core.Players[source]
     return player
 end
@@ -122,7 +127,10 @@ local function formatItemData(item, sharedItem)
         id = item.id,
         name = item.name,
         image = sharedItem.image,
-        size = sharedItem.size or { width = 1, height = 1 },
+        size = sharedItem.size or {
+            width = 1,
+            height = 1
+        },
         position = item.position,
         rotation = item.rotation or 0,
         rarity = sharedItem.rarity or "common",
@@ -136,17 +144,16 @@ local function formatItemData(item, sharedItem)
     }
 end
 
-
 function Core.Functions.LoadCharacter(source, citizenid, isNewCharacter)
-    if not source or not citizenid then 
+    if not source or not citizenid then
         print("^1Error: Invalid source or citizenid in LoadCharacter^7")
-        return false 
+        return false
     end
-    
+
     source = tonumber(source)
-    if not source then 
+    if not source then
         print("^1Error: Invalid source type in LoadCharacter^7")
-        return false 
+        return false
     end
 
     MySQL.Async.fetchAll('SELECT * FROM characters WHERE citizenid = @citizenid LIMIT 1', {
@@ -155,8 +162,8 @@ function Core.Functions.LoadCharacter(source, citizenid, isNewCharacter)
         if result and result[1] then
             local char = result[1]
             local self = {}
-            
-            print('[debug] loading character money '..char.money)
+
+            print('[debug] loading character money ' .. char.money)
             self.source = source
             self.citizenid = citizenid
             self.Money = json.decode(char.money) or {
@@ -168,7 +175,7 @@ function Core.Functions.LoadCharacter(source, citizenid, isNewCharacter)
                 label = "Unemployed",
                 grade = 0,
                 grade_label = "Unemployed",
-                salary = 0,
+                salary = 0
             }
             if isNewCharacter then
                 self.position = Config.StartingPosition
@@ -197,12 +204,11 @@ function Core.Functions.LoadCharacter(source, citizenid, isNewCharacter)
                 items = {}
             }
 
-    
             self.Functions = {
                 Save = function()
                     SavePlayerData(self.source)
                 end,
-                
+
                 UpdateMoney = function(moneytype, amount)
                     if moneytype == "cash" then
                         self.Money.cash = amount
@@ -223,10 +229,10 @@ function Core.Functions.LoadCharacter(source, citizenid, isNewCharacter)
                     self.Job.salary = Core.Jobs[job][grade].salary
                     self.Job.grade_label = Core.Jobs[job][grade].label
                     self.Functions.Save()
-                
+
                     return true
                 end,
-                
+
                 UpdateAppearance = function(AppearanceData)
                     local safeAppearance = {
                         model = AppearanceData.model or self.Appearance.model,
@@ -239,14 +245,13 @@ function Core.Functions.LoadCharacter(source, citizenid, isNewCharacter)
                     self.Functions.Save()
                     return true
                 end,
-                
+
                 GetAppearance = function()
                     return self.Appearance
                 end,
-                
-                UpdateInventory = function(inventory)
-                    print('[' .. self.citizenid .. '] Updating inventory', inventory)                    
 
+                UpdateInventory = function(inventory)
+                    print('[' .. self.citizenid .. '] Updating inventory', inventory)
 
                     self.Inventory = inventory
                     MySQL.Async.execute([[
@@ -272,17 +277,16 @@ function Core.Functions.LoadCharacter(source, citizenid, isNewCharacter)
                         items = self.Inventory.items
                     })
                     return true
-                end,
-                
-                
+                end
+
             }
- 
+
             Core.Players[source] = self
-            
+
             print("^2Loaded character^7")
             print("Source:", self.source)
             print("CitizenID:", self.citizenid)
-            
+
             TriggerClientEvent('kCore:loadPlayer', source, self, isNewCharacter)
             return true
         else
@@ -292,15 +296,13 @@ function Core.Functions.LoadCharacter(source, citizenid, isNewCharacter)
     end)
 end
 
-
-function SavePlayerData(source)  -- rework eventually 
+function SavePlayerData(source) -- rework eventually 
     local Player = Core.Functions.GetPlayer(source)
     if Player then
         local ped = GetPlayerPed(source)
         print(GetEntityCoords(ped), ped)
         local pos = GetEntityCoords(ped)
         local heading = GetEntityHeading(ped)
-        
 
         local position = { -- fallback incase something goes weird
             x = pos.x or Config.StartingPosition.x,
@@ -309,14 +311,12 @@ function SavePlayerData(source)  -- rework eventually
             heading = heading or Config.StartingPosition.heading
         }
 
-        print(json.encode(position), source, ' INFO')
-
         local saveData = {
             money = json.encode(Player.Money),
             position = json.encode(position),
             stats = json.encode(Player.Stats),
             inventory = json.encode(Player.Inventory),
-            job = json.encode(Player.Job),  
+            job = json.encode(Player.Job),
             citizenid = Player.citizenid
         }
 
@@ -331,30 +331,29 @@ function SavePlayerData(source)  -- rework eventually
             WHERE citizenid = @citizenid
         ]], saveData, function(rowsChanged)
             if rowsChanged == 0 then
-                print("^1Failed to update database for player " .. source .. " (CitizenID: " .. Player.citizenid .. ")^7")
+                print("^1Failed to update database for player " .. source .. " (CitizenID: " .. Player.citizenid ..")^7")
             else
                 print("^2Successfully saved player data to database^7")
             end
         end)
-
         return true
     end
     return false
 end
 
-function Core.Functions.SelectCharacter(id, slot, source, cb) 
+function Core.Functions.SelectCharacter(id, slot, source, cb)
     local identifier = GetPlayerIdentifier(source)
-    
-    if not identifier then 
+
+    if not identifier then
         print("^1Error: No identifier found for source^7:", source)
-        return 
+        return
     end
-    
+
     print("^2Processing character selection^7")
     print("Source:", source)
     print("Identifier:", identifier)
     print("Slot:", slot)
-    
+
     MySQL.Async.fetchAll('SELECT citizenid FROM characters WHERE identifier = @identifier AND char_slot = @slot', {
         ['@identifier'] = identifier,
         ['@slot'] = slot
@@ -364,8 +363,8 @@ function Core.Functions.SelectCharacter(id, slot, source, cb)
             Core.Functions.LoadCharacter(source, result[1].citizenid, false)
         end
     end)
-end exports('SelectCharacter', Core.Functions.SelectCharacter)
-
+end
+exports('SelectCharacter', Core.Functions.SelectCharacter)
 
 function Core.Functions.UpdatePlayerAppearance(source, AppearanceData)
     local Player = Core.Functions.GetPlayer(source)
@@ -374,75 +373,6 @@ function Core.Functions.UpdatePlayerAppearance(source, AppearanceData)
     end
     return false
 end
-
-function Core.Functions.SetPlayerJob(source, job, grade)
-    local Player = Core.Functions.GetPlayer(source)
-    if not Player then
-        return false
-    end
-
-    if not Core.Jobs[job] then
-        print("^1Error: Job does not exist^7:", job, grade)
-        return false
-    end
-
-    if not Core.Jobs[job].grades[grade] then
-        print("^1Error: Job grade does not exist^7:", job, grade)
-        return false
-    end
-
-    Player.Job.name = job
-    Player.Job.grade = grade
-    Player.Job.salary = Core.Jobs[job].grades[grade].salary
-    Player.Job.grade_label = Core.Jobs[job].grades[grade].label
-
-    Player.Functions.Save()
-
-    return true
-end
-
-exports('SetPlayerJob', Core.Functions.SetPlayerJob)
-
-function Core.Functions.GetPlayerJob(source)
-    local Player = Core.Functions.GetPlayer(source)
-    if not Player then
-        return false
-    end
-
-    return Player.Job
-end
-
-exports('GetPlayerJob', Core.Functions.GetPlayerJob)
-
-function Core.Functions.GetAllJobs()
-    return Core.Jobs
-end
-
-exports('GetAllJobs', Core.Functions.GetAllJobs)
-
-function Core.Functions.ReloadJobs() -- load all jobs to cache
-    Core.Jobs = {}
-    local jobs = MySQL.query.await("SELECT * FROM jobs")
-    for _, v in pairs(jobs) do
-        local jobData = {
-            name = v.name,
-            label = v.label,
-            grades = {}
-        }
-        local grades = MySQL.query.await("SELECT * FROM job_grades WHERE job_name = ?", {v.name})
-        for _, g in pairs(grades) do
-            jobData.grades[g.grade] = {
-                grade = g.grade, -- double to make looping through jobs more comfortable
-                label = g.label,
-                salary = g.salary
-            }
-        end
-
-        Core.Jobs[v.name] = jobData
-    end
-end
-
-exports("ReloadJobs", Core.Functions.ReloadJobs)
 
 AddEventHandler('playerDropped', function()
     local source = source
@@ -455,5 +385,3 @@ function Core.Functions.IsPlayerInitialized(source)
     return Core.Players[source] ~= nil
 end
 
-
-Core.Functions.ReloadJobs()

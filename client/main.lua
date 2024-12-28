@@ -5,4 +5,6 @@ Core = {
     Shared = Shared
 }
 
-exports('GetCore', function() return Core end)
+exports('GetCore', function()
+    return Core
+end)

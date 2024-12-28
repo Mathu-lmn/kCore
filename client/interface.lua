@@ -2,49 +2,60 @@ local activeProgress = nil
 local activeCallback = nil
 
 RegisterNUICallback('progressComplete', function(data, cb)
-    if not activeProgress then 
-        cb({ status = 'error', message = 'No active progress' })
-        return 
+    if not activeProgress then
+        cb({
+            status = 'error',
+            message = 'No active progress'
+        })
+        return
     end
-    
+
     local callback = activeCallback
     activeProgress = nil
     activeCallback = nil
-    
+
     if callback then
         callback(data.success)
     end
-    
-    cb({ status = 'ok' })
+
+    cb({
+        status = 'ok'
+    })
 end)
 
 local function StartProgress(options, cb)
     if activeProgress then
-        SendNUIMessage({ action = "cancelProgress" })
+        SendNUIMessage({
+            action = "cancelProgress"
+        })
         Wait(100)
     end
-    
+
     activeProgress = true
     activeCallback = cb
-    
+
     SendNUIMessage({
         action = "startProgress",
         data = {
             duration = options.duration,
             label = options.label,
-            color = options.color or "green" 
+            color = options.color or "green"
         }
     })
 end
 
 local function CancelProgress()
-    if not activeProgress then return false end
-    
-    SendNUIMessage({ action = "cancelProgress" })
-    
+    if not activeProgress then
+        return false
+    end
+
+    SendNUIMessage({
+        action = "cancelProgress"
+    })
+
     activeProgress = nil
     activeCallback = nil
-    
+
     return true
 end
 
