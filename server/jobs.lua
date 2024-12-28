@@ -112,13 +112,12 @@ RegisterCommand('createPolice', function(source, args)
     TriggerClientEvent('kCore:debugJob', source)
 end)
 
-
 RegisterCommand('setjob', function(source, args)
     local playerId = tonumber(args[1])
     local job = args[2]
     local grade = tonumber(args[3])
 
-    if source == 0 then -- Console command
+    if source == 0 then 
         if not playerId or not job or not grade then
             print("^1Usage: setjob [playerID] [job] [grade]^7")
             return
@@ -129,7 +128,7 @@ RegisterCommand('setjob', function(source, args)
         else
             print("^1Failed to change job. Player might not exist or invalid job/grade specified.^7")
         end
-    else -- Player command
+    else 
         if not playerId or not job or not grade then
             TriggerClientEvent('chat:addMessage', source, {
                 color = {255, 0, 0},
@@ -141,7 +140,8 @@ RegisterCommand('setjob', function(source, args)
         if Core.Functions.SetPlayerJob(playerId, job, grade) then
             TriggerClientEvent('chat:addMessage', source, {
                 color = {0, 255, 0},
-                args = {"SYSTEM", "Successfully changed job of player " .. playerId .. " to " .. job .. " grade " .. grade}
+                args = {"SYSTEM",
+                        "Successfully changed job of player " .. playerId .. " to " .. job .. " grade " .. grade}
             })
         else
             TriggerClientEvent('chat:addMessage', source, {

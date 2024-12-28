@@ -178,10 +178,8 @@ function Core.Functions.UpdateItemMetadata(source, slot, metadata)
 end
 
 function Core.Functions.CreateGroundInventory(src, id)
-    if not id then
-        return nil
-    end
-
+    if not id then return nil end
+    
     if not GroundInventories[id] then
         GroundInventories[id] = {
             id = id,
@@ -195,24 +193,31 @@ function Core.Functions.CreateGroundInventory(src, id)
             }
         }
     end
-
+    
     return GroundInventories[id]
 end
 
 function Core.Functions.GetInventoryById(id)
-    return id and GroundInventories[id] or Core.Functions.CreateGroundInventory(id)
+    if not id then return nil end
+    return GroundInventories[id]
 end
+
 
 function Core.Functions.MoveInventoryItem(src, item, sourceId, targetId)
     local Player = Core.Functions.GetPlayer(src)
-    if not Player then
-        return false
-    end
+    if not Player then return false end
 
     local sourceInv = sourceId == 'player' and Player.Inventory or Core.Functions.GetInventoryById(sourceId)
     local targetInv = targetId == 'player' and Player.Inventory or Core.Functions.GetInventoryById(targetId)
 
-    print('^2' .. targetId, json.encode(targetInv), 'targetInv')
+    if targetId:match('^ground_') and not targetInv then
+        targetInv = Core.Functions.CreateGroundInventory(src, targetId)
+    end
+
+    if sourceId:match('^ground_') and not sourceInv then
+        return false
+    end
+
     if not sourceInv or not targetInv then
         print("^1Error: Invalid inventory objects^7")
         return false, nil
@@ -245,18 +250,10 @@ function Core.Functions.MoveInventoryItem(src, item, sourceId, targetId)
         end
     end
 
-    print("^3Source Item:^7", json.encode(sourceItem))
     if targetItem then
-        print("^3Target Item for Stacking:^7", json.encode(targetItem))
-    end
-
-    if targetItem then
-        print("^2Stacking items^7")
         targetItem.count = (targetItem.count or 1) + (sourceItem.count or 1)
         table.remove(sourceInv.items, sourceItemIndex)
-        print("^2New stack count:^7", targetItem.count)
     else
-        print("^2Moving item to new position^7")
         local movedItem = table.remove(sourceInv.items, sourceItemIndex)
         if movedItem then
             movedItem.position = item.position
@@ -267,13 +264,15 @@ function Core.Functions.MoveInventoryItem(src, item, sourceId, targetId)
         end
     end
 
+    if sourceId:match('^ground_') and #sourceInv.items == 0 then
+        GroundInventories[sourceId] = nil
+    end
+
     if sourceId == 'player' or targetId == 'player' then
         Player.Functions.UpdateInventory(Player.Inventory)
     end
 
-    -- update viewers
-    if sourceId:match('^ground_') then
-        GroundInventories[sourceId] = sourceInv
+    if sourceId:match('^ground_') and GroundInventories[sourceId] then
         for viewerId in pairs(sourceInv.viewers) do
             if viewerId ~= src then
                 TriggerClientEvent('kCore:refreshInventory', viewerId, {
@@ -288,8 +287,6 @@ function Core.Functions.MoveInventoryItem(src, item, sourceId, targetId)
     end
 
     if targetId:match('^ground_') then
-        GroundInventories[targetId] = targetInv
-
         for viewerId in pairs(targetInv.viewers) do
             if viewerId ~= src then
                 TriggerClientEvent('kCore:refreshInventory', viewerId, {
@@ -311,30 +308,25 @@ function Core.Functions.MoveInventoryItem(src, item, sourceId, targetId)
         items = Player.Inventory.items
     }}
 
-    if sourceId ~= 'player' then
-        local otherInv = Core.Functions.GetInventoryById(sourceId)
-        if otherInv then
-            table.insert(responseData, {
-                id = otherInv.id,
-                name = otherInv.name,
-                rows = otherInv.rows,
-                columns = otherInv.columns,
-                items = otherInv.items
-            })
-        end
+ 
+    if sourceId ~= 'player' and GroundInventories[sourceId] then
+        table.insert(responseData, {
+            id = sourceId,
+            name = GroundInventories[sourceId].name,
+            rows = GroundInventories[sourceId].rows,
+            columns = GroundInventories[sourceId].columns,
+            items = GroundInventories[sourceId].items
+        })
     end
 
     if targetId ~= 'player' and targetId ~= sourceId then
-        local otherInv = Core.Functions.GetInventoryById(targetId)
-        if otherInv then
-            table.insert(responseData, {
-                id = otherInv.id,
-                name = otherInv.name,
-                rows = otherInv.rows,
-                columns = otherInv.columns,
-                items = otherInv.items
-            })
-        end
+        table.insert(responseData, {
+            id = targetId,
+            name = targetInv.name,
+            rows = targetInv.rows,
+            columns = targetInv.columns,
+            items = targetInv.items
+        })
     end
 
     return true, responseData
