@@ -41,7 +41,8 @@ function Core.Functions.GetCharacterSlots(identifier, cb)
 
             cb({
                 characters = slots,
-                maxSlots = Config.MaxCharacterSlots
+                maxSlots = Config.MaxCharacterSlots,
+                autoload = Config.AutoloadChar
             })
         end)
 end
@@ -286,7 +287,7 @@ function Core.Functions.LoadCharacter(source, citizenid, isNewCharacter)
             print("^2Loaded character^7")
             print("Source:", self.source)
             print("CitizenID:", self.citizenid)
-
+            SetPlayerRoutingBucket(source, 0)
             TriggerClientEvent('kCore:loadPlayer', source, self, isNewCharacter)
             return true
         else
