@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS characters (
     citizenid VARCHAR(50) NOT NULL,
     first_name VARCHAR(50) NOT NULL,
     last_name VARCHAR(50) NOT NULL,
-    job JSON DEFAULT '{"name": "unemployed", "grade": 0}',
+    job JSON DEFAULT '{"name": "unemployed", "grade": 0, "salary": 0, "label": "Unemployed", "grade_label": "Unemployed"}',
     money JSON DEFAULT '{"cash": 0, "bank": 0}',
     position JSON DEFAULT '{
         "x": -269.4,

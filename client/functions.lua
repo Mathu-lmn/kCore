@@ -1,4 +1,3 @@
-
 function Core.Functions.GetPlayer()
     return Core.Player
 end

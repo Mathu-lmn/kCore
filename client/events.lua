@@ -1,5 +1,3 @@
-
-
 RegisterNetEvent('kCore:updateNeeds')
 AddEventHandler('kCore:updateNeeds', function(newHunger, newThirst)
     Core.Player.Stats.hunger = newHunger
@@ -17,7 +15,14 @@ end)
 RegisterNetEvent('kCore:updateMoney')
 AddEventHandler('kCore:updateMoney', function(moneyData)
     Core.Player.Money = moneyData
-    exports["kNotify"]:Notify({type = "cash", title = "Money Updated. (Core Debug)", message = json.encode(moneyData), duration = 5000, position = "top-right", playSound = true})
+    exports["kNotify"]:Notify({
+        type = "cash",
+        title = "Money Updated. (Core Debug)",
+        message = json.encode(moneyData),
+        duration = 5000,
+        position = "top-right",
+        playSound = true
+    })
 end)
 
 RegisterNetEvent('kCore:drink')
@@ -43,3 +48,7 @@ AddEventHandler('kCore:notification', function(message)
     })
 end)
 
+
+RegisterNetEvent('kCore:syncJobs', function(jobs)
+    Shared.Jobs = jobs
+end)

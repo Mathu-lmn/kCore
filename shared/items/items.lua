@@ -51,7 +51,6 @@ Shared.Items = {
         ammoType = 'rifle_ammo'
     },
 
-
     ['weapon_pistol'] = {
         itemName = 'weapon_pistol',
         label = 'Pistol',
@@ -86,7 +85,7 @@ Shared.Items = {
         shouldCloseInventory = true,
         type = 'item'
     },
-    
+
     ['pistol_ammo'] = {
         itemName = 'pistol_ammo',
         label = 'Pistol Ammo',
@@ -102,5 +101,5 @@ Shared.Items = {
         rarity = 'pistolAmmo',
         shouldCloseInventory = true,
         type = 'item'
-    },
+    }
 }

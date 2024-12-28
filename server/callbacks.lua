@@ -8,7 +8,7 @@ RegisterNetEvent('kCore:triggerCallback')
 AddEventHandler('kCore:triggerCallback', function(name, requestId, ...)
     local source = source
     local callbackfn = Callbacks[name]
-    
+
     if callbackfn then
         callbackfn(source, function(...)
             TriggerClientEvent('kCore:callbackResponse', source, requestId, ...)

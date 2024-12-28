@@ -10,7 +10,7 @@ end
 RegisterNetEvent('kCore:callbackResponse')
 AddEventHandler('kCore:callbackResponse', function(requestId, ...)
     local cb = CallbackResponses[requestId]
-    
+
     if cb then
         cb(...)
         CallbackResponses[requestId] = nil

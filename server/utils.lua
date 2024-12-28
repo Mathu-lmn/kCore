@@ -4,7 +4,7 @@ function Core.Functions.GenerateUID()
     local template = "KC%d%d%d%d%d%d"
 
     local uid
-    
+
     while true do
         local nums = ""
         for i = 1, 6 do

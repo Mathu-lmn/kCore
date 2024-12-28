@@ -7,7 +7,7 @@ version '0.0.1'
 
 ui_page 'web/build/index.html'
 
-
+lua54 'yes'
 shared_scripts {
     'config.lua',
     'shared/**/**'
@@ -38,7 +38,8 @@ server_scripts {
     'server/commands.lua',
     'server/inventory.lua',
     'server/items.lua',
-    'server/callbacks.lua'
+    'server/callbacks.lua',
+    'server/jobs.lua'
 }
 
 
