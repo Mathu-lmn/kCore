@@ -4,7 +4,7 @@ function Core.Functions.CreateJob(jobName, label, config, override)
     end
 
     if not config.grades or type(config.grades) ~= 'table' then
-        return error('must be tabl')
+        return error('must be table')
     end
 
     if Shared.Jobs[jobName] and not override then
@@ -17,20 +17,23 @@ function Core.Functions.CreateJob(jobName, label, config, override)
         grades = {}
     }
 
-    local gradesArray = {} -- supports both array and dictionary styles for grades
     if config.grades[0] then
-        for i = 0, #config.grades do
-            if config.grades[i] then
-                table.insert(gradesArray, config.grades[i])
+        if config.grades[0].rank ~= 0 then
+            for k, v in pairs(config.grades) do
+                v.rank = v.rank - 1
             end
         end
     else
-        gradesArray = config.grades
+        if config.grades[1].rank ~= 0 then
+            for k, v in pairs(config.grades) do
+                v.rank = v.rank - 1
+            end
+        end
     end
 
-    for _, grade in ipairs(gradesArray) do
-        if not grade.name or not grade.salary or not grade.rank then
-            return error(string.format('invalid grade config for job %s at index %d', jobName, _))
+    for i, grade in pairs(config.grades) do
+        if not grade or not grade.name or not grade.salary or not grade.rank then
+            return error(string.format('invalid grade config for job %s at index %d', jobName, i))
         end
 
         job.grades[grade.rank] = {
@@ -97,13 +100,33 @@ RegisterCommand('createPolice', function(source, args)
         grades = {{
             name = 'Cadet',
             salary = 1000,
-            rank = 0
+            rank = 1
         }, {
             name = 'Officer',
             salary = 1500,
-            rank = 1
+            rank = 2
         }, {
             name = 'Sergeant',
+            salary = 2000,
+            rank = 3
+        }}
+    })
+
+    TriggerClientEvent('kCore:debugJob', source)
+end)
+
+RegisterCommand('createFire', function(source, args)
+    Core.Functions.CreateJob("fire", "LSFD", {
+        grades = { [0] = {
+            name = 'Paramedic',
+            salary = 1000,
+            rank = 0
+        }, [1] = {
+            name = 'Firefighter',
+            salary = 1500,
+            rank = 1
+        }, [2] = {
+            name = 'Chief',
             salary = 2000,
             rank = 2
         }}
