@@ -5,6 +5,8 @@ function Core.Functions.CreateUseableItem(itemName, cb)
     Core.UsableItems[itemName] = cb
 end
 
+exports('CreateUseableItem', Core.Functions.CreateUseableItem)
+
 function Core.Functions.AddItem(source, itemName, amount, metadata)
     local Player = Core.Functions.GetPlayer(source)
     if not Player then
