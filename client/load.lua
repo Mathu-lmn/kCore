@@ -60,6 +60,7 @@ AddEventHandler('kCore:loadPlayer', function(data, isNew)
     end
 
     Core.Player.IsLoaded = true
+    DiscordStatus()
 end)
 
 RegisterNetEvent('refreshAppearance')

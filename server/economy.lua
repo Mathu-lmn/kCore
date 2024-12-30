@@ -22,7 +22,11 @@ function Core.Functions.AddMoney(source, amount, moneytype)
     TriggerClientEvent('kCore:updateMoney', source, {
         cash = Player.Money.cash,
         bank = Player.Money.bank
-    })
+    }, moneytype)
+    TriggerEvent('kCore:updateMoney', source, {
+        cash = Player.Money.cash,
+        bank = Player.Money.bank
+    }, moneytype)
 
     return true
 end
@@ -59,7 +63,11 @@ function Core.Functions.RemoveMoney(source, amount, moneytype)
     TriggerClientEvent('kCore:updateMoney', source, {
         cash = Player.Money.cash,
         bank = Player.Money.bank
-    })
+    }, moneytype)
+    TriggerEvent('kCore:updateMoney', source, {
+        cash = Player.Money.cash,
+        bank = Player.Money.bank
+    }, moneytype)
 
     return true
 end

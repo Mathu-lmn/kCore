@@ -95,6 +95,11 @@ function Core.Functions.GetPlayerJob(source)
 end
 exports('GetPlayerJob', Core.Functions.GetPlayerJob)
 
+function Core.Functions.GetAllJobs()
+    return Shared.Jobs
+end
+exports('GetAllJobs', Core.Functions.GetAllJobs)
+
 RegisterCommand('createPolice', function(source, args)
     Core.Functions.CreateJob("police", "LSPD", {
         grades = {{

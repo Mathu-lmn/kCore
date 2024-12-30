@@ -289,6 +289,7 @@ function Core.Functions.LoadCharacter(source, citizenid, isNewCharacter)
             print("CitizenID:", self.citizenid)
             SetPlayerRoutingBucket(source, 0)
             TriggerClientEvent('kCore:loadPlayer', source, self, isNewCharacter)
+            TriggerEvent('kCore:loadPlayer', source, self, isNewCharacter)
             return true
         else
             print('^1Error: No character found for citizenid^7:', citizenid)
