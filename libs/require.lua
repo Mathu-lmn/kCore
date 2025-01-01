@@ -3,7 +3,7 @@ local loadedModules = {}
 
 
 package = package or {}
-package.path = package.path or "./?.lua;"
+package.path = package.path or "?.lua;"
 package.preload = package.preload or {}
 package.loaded = setmetatable(package.loaded or {}, {
     __index = loadedModules,

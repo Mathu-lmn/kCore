@@ -11,7 +11,7 @@ use_experimental_fxv2_oal 'yes'
 lua54 'yes'
 
 shared_scripts {
-    'libs/*.lua',
+    'libs/*.lua', 
     'shared/**/**'
 }
 
@@ -43,7 +43,8 @@ server_scripts {
 
 
 files {
-    'config/*.lua',
+    'config/client.lua',
+    'config/shared.lua',
     'shared/itemImages/*.png',
     'web/build/index.html',
 	'web/build/**/*',
