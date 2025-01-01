@@ -7,7 +7,9 @@ version '0.0.1'
 
 ui_page 'web/build/index.html'
 
+use_experimental_fxv2_oal 'yes'
 lua54 'yes'
+
 shared_scripts {
     'config.lua',
     'shared/**/**'
