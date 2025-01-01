@@ -1,3 +1,6 @@
+
+local Config = require("config.server")
+
 Core = {
     Functions = {},
     Players = {},

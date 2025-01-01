@@ -11,13 +11,9 @@ use_experimental_fxv2_oal 'yes'
 lua54 'yes'
 
 shared_scripts {
-    'config.lua',
+    'libs/*.lua',
     'shared/**/**'
 }
-
--- egg likes to sniff feet
-
-
 
 client_scripts {
     'client/main.lua',
@@ -47,6 +43,7 @@ server_scripts {
 
 
 files {
+    'config/*.lua',
     'shared/itemImages/*.png',
     'web/build/index.html',
 	'web/build/**/*',
