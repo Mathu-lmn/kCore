@@ -24,6 +24,8 @@ local function FormatNumber(number)
     return formatted
 end
 
+
+
 CreateThread(function()
     while true do
         Wait(Config.SaveInterval)

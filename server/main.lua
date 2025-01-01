@@ -1,5 +1,5 @@
 
-local Config = require("config.server")
+Config = require("config.server") -- global it for now
 
 Core = {
     Functions = {},
