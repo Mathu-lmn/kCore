@@ -122,21 +122,13 @@ function Core.Functions.GetMoney(source, type)
     end
 end
 
-exports('AddMoney', function(source, amount, type)
-    return Core.Functions.AddMoney(source, amount, type)
-end)
+exports('AddMoney', Core.Functions.AddMoney)
 
-exports('RemoveMoney', function(source, amount, type)
-    return Core.Functions.RemoveMoney(source, amount, type)
-end)
+exports('RemoveMoney', Core.Functions.RemoveMoney)
 
-exports('GetMoney', function(source, type)
-    return Core.Functions.GetMoney(source, type)
-end)
+exports('GetMoney', Core.Functions.GetMoney)
 
-exports('TransferMoney', function(source, target, amount)
-    return Core.Functions.TransferMoney(source, target, amount)
-end)
+exports('TransferMoney', Core.Functions.TransferMoney)
 
 -- paychecks
 CreateThread(function()
@@ -153,3 +145,58 @@ CreateThread(function()
         end
     end
 end)
+
+---- company funds
+function Core.Functions.GetAccountMoney(account)
+    if not account then
+        return false
+    end
+    local rs = MySQL.query.await('SELECT balance FROM bank_accounts WHERE owner = ? LIMIT 1', {account})
+    if rs[1] then
+        return rs[1].balance
+    end
+end
+
+exports('GetAccountMoney', Core.Functions.GetAccountMoney)
+
+function Core.Functions.AddAccountMoney(account, amount)
+    if not account then
+        return false
+    end
+
+    amount = tonumber(amount)
+    if not amount or amount <= 0 then
+        return false
+    end
+
+    local rs = MySQL.query.await('SELECT balance FROM bank_accounts WHERE owner = ? LIMIT 1', {account})
+    if rs[1] then
+        local newBalance = rs[1].balance + amount
+        MySQL.query.await('UPDATE bank_accounts SET balance = ? WHERE owner = ?', {newBalance, account})
+        TriggerEvent('kCore:updateAccountMoney', account, newBalance, rs[1].balance)
+        return newBalance
+    end
+end
+
+exports('AddAccountMoney', Core.Functions.AddAccountMoney)
+
+function Core.Functions.RemoveAccountMoney(account, amount)
+    if not account then
+        return false
+    end
+
+    amount = tonumber(amount)
+    if not amount or amount <= 0 then
+        return false
+    end
+
+    local rs = MySQL.query.await('SELECT balance FROM bank_accounts WHERE owner = ? LIMIT 1', {account})
+    if rs[1] then
+        local newBalance = rs[1].balance - amount
+        MySQL.query.await('UPDATE bank_accounts SET balance = ? WHERE owner = ?', {newBalance, account})
+        TriggerEvent('kCore:updateAccountMoney', account, newBalance, rs[1].balance)
+        return newBalance
+    end
+end
+
+exports('RemoveAccountMoney', Core.Functions.RemoveAccountMoney)

@@ -42,3 +42,9 @@ CREATE TABLE IF NOT EXISTS character_outfits (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (citizenid) REFERENCES characters(citizenid) ON DELETE CASCADE
 );
+
+CREATE TABLE IF NOT EXISTS bank_accounts (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    balance INT NOT NULL DEFAULT 0,
+    owner VARCHAR(50) NOT NULL
+);
