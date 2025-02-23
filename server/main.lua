@@ -210,7 +210,10 @@ function Core.Functions.LoadCharacter(source, citizenid, isNewCharacter)
 
             self.Functions = {
                 Save = function()
-                    SavePlayerData(self.source)
+                    if SavePlayerData(self.source) then
+                        print("^2Saved player data^7")
+                        TriggerClientEvent('kCore:updateData', self.source, self)
+                    end
                 end,
 
                 UpdateMoney = function(moneytype, amount)
@@ -218,20 +221,22 @@ function Core.Functions.LoadCharacter(source, citizenid, isNewCharacter)
                         self.Money.cash = amount
                     elseif moneytype == "bank" then
                         self.Money.bank = amount
+                    elseif moneytype == "black_money" then
+                        self.Money.black_money = amount
                     end
                     self.Functions.Save()
                 end,
 
                 UpdateJob = function(job, grade)
-                    if not Core.Jobs[job] then
+                    if not Shared.Jobs[job] then
                         print("^1Error: Job does not exist^7:", job)
                         return false
                     end
 
-                    self.Job.name = job
-                    self.Job.grade = grade
-                    self.Job.salary = Core.Jobs[job][grade].salary
-                    self.Job.grade_label = Core.Jobs[job][grade].label
+                    self.Meta.Job.name = job
+                    self.Meta.Job.grade = grade
+                    self.Meta.Job.salary = Shared.Jobs[job][grade].salary
+                    self.Meta.Job.grade_label = Shared.Jobs[job][grade].label
                     self.Functions.Save()
 
                     return true
@@ -254,7 +259,7 @@ function Core.Functions.LoadCharacter(source, citizenid, isNewCharacter)
                     return self.Appearance
                 end,
 
-                UpdateInventory = function(inventory)
+                UpdateInventory = function(inventory) -- rework eventually
                     print('[' .. self.citizenid .. '] Updating inventory', inventory)
 
                     self.Inventory = inventory
@@ -282,7 +287,6 @@ function Core.Functions.LoadCharacter(source, citizenid, isNewCharacter)
                     })
                     return true
                 end
-
             }
 
             Core.Players[source] = self

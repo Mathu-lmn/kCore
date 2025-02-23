@@ -1,3 +1,4 @@
+
 function Core.Functions.CreateJob(jobName, label, config, override)
     if not jobName or not label then
         return error('nojobName')
@@ -8,7 +9,7 @@ function Core.Functions.CreateJob(jobName, label, config, override)
     end
 
     if Shared.Jobs[jobName] and not override then
-        return error(string.format('job %s already exists', jobName))
+        return Shared.Jobs[jobName] 
     end
 
     local job = {
@@ -66,6 +67,7 @@ function Core.Functions.SetPlayerJob(source, job, grade)
 
     Player.Job.name = job
     Player.Job.grade = grade
+    Player.Job.label = Shared.Jobs[job].label 
     Player.Job.salary = Shared.Jobs[job].grades[grade].salary
     Player.Job.grade_label = Shared.Jobs[job].grades[grade].name
 
@@ -115,7 +117,7 @@ RegisterCommand('createPolice', function(source, args)
             salary = 2000,
             rank = 3
         }}
-    })
+    }, true) 
 
     TriggerClientEvent('kCore:debugJob', source)
 end)
@@ -135,7 +137,7 @@ RegisterCommand('createFire', function(source, args)
             salary = 2000,
             rank = 2
         }}
-    })
+    }, true) 
 
     TriggerClientEvent('kCore:debugJob', source)
 end)

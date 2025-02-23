@@ -40,6 +40,12 @@ local function LoadCharacterAppearance(charData)
     end
 end
 
+RegisterNetEvent('kCore:updateData')
+AddEventHandler('kCore:updateData', function(data)
+    Core.Player = data
+    print(json.encode(data) .. ' FUCKING DATA')
+end)
+
 RegisterNetEvent('kCore:loadPlayer')
 AddEventHandler('kCore:loadPlayer', function(data, isNew)
     Core.Player = data
