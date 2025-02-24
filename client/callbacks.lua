@@ -9,8 +9,9 @@ end
 
 RegisterNetEvent('kCore:callbackResponse')
 AddEventHandler('kCore:callbackResponse', function(requestId, ...)
+    if source ~= 65535 then return end -- if not server
+    
     local cb = CallbackResponses[requestId]
-
     if cb then
         cb(...)
         CallbackResponses[requestId] = nil
