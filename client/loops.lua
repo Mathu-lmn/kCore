@@ -1,13 +1,11 @@
+local DisableControlAction = DisableControlAction
+
+
+
 CreateThread(function()
     while true do
-        Wait(0)
         DisableControlAction(0, 37, true)
+    
+        Wait(0)
     end
-end)
-
-
-RegisterNetEvent('kCore:debugJob', function()
-    print('yipee')
-    Wait(1000)
-    print(json.encode(Shared.Jobs))
 end)

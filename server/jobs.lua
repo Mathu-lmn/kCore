@@ -1,3 +1,4 @@
+
 function Core.Functions.CreateJob(jobName, label, config, override)
     if not jobName or not label then
         return error('nojobName')
@@ -8,7 +9,7 @@ function Core.Functions.CreateJob(jobName, label, config, override)
     end
 
     if Shared.Jobs[jobName] and not override then
-        return error(string.format('job %s already exists', jobName))
+        return Shared.Jobs[jobName] 
     end
 
     local job = {
@@ -66,6 +67,7 @@ function Core.Functions.SetPlayerJob(source, job, grade)
 
     Player.Job.name = job
     Player.Job.grade = grade
+    Player.Job.label = Shared.Jobs[job].label 
     Player.Job.salary = Shared.Jobs[job].grades[grade].salary
     Player.Job.grade_label = Shared.Jobs[job].grades[grade].name
 
@@ -100,85 +102,6 @@ function Core.Functions.GetAllJobs()
 end
 exports('GetAllJobs', Core.Functions.GetAllJobs)
 
-RegisterCommand('createPolice', function(source, args)
-    Core.Functions.CreateJob("police", "LSPD", {
-        grades = {{
-            name = 'Cadet',
-            salary = 1000,
-            rank = 1
-        }, {
-            name = 'Officer',
-            salary = 1500,
-            rank = 2
-        }, {
-            name = 'Sergeant',
-            salary = 2000,
-            rank = 3
-        }}
-    })
-
-    TriggerClientEvent('kCore:debugJob', source)
-end)
-
-RegisterCommand('createFire', function(source, args)
-    Core.Functions.CreateJob("fire", "LSFD", {
-        grades = { [0] = {
-            name = 'Paramedic',
-            salary = 1000,
-            rank = 0
-        }, [1] = {
-            name = 'Firefighter',
-            salary = 1500,
-            rank = 1
-        }, [2] = {
-            name = 'Chief',
-            salary = 2000,
-            rank = 2
-        }}
-    })
-
-    TriggerClientEvent('kCore:debugJob', source)
-end)
-
-RegisterCommand('setjob', function(source, args)
-    local playerId = tonumber(args[1])
-    local job = args[2]
-    local grade = tonumber(args[3])
-
-    if source == 0 then 
-        if not playerId or not job or not grade then
-            print("^1Usage: setjob [playerID] [job] [grade]^7")
-            return
-        end
-
-        if Core.Functions.SetPlayerJob(playerId, job, grade) then
-            print("^2Successfully changed job of player " .. playerId .. " to " .. job .. " grade " .. grade .. "^7")
-        else
-            print("^1Failed to change job. Player might not exist or invalid job/grade specified.^7")
-        end
-    else 
-        if not playerId or not job or not grade then
-            TriggerClientEvent('chat:addMessage', source, {
-                color = {255, 0, 0},
-                args = {"SYSTEM", "Usage: /setjob [playerID] [job] [grade]"}
-            })
-            return
-        end
-
-        if Core.Functions.SetPlayerJob(playerId, job, grade) then
-            TriggerClientEvent('chat:addMessage', source, {
-                color = {0, 255, 0},
-                args = {"SYSTEM",
-                        "Successfully changed job of player " .. playerId .. " to " .. job .. " grade " .. grade}
-            })
-        else
-            TriggerClientEvent('chat:addMessage', source, {
-                color = {255, 0, 0},
-                args = {"SYSTEM", "Failed to change job. Player might not exist or invalid job/grade specified."}
-            })
-        end
-    end
-end, false)
 
 RegisterNetEvent('playerJoining', function() -- perhaps another way?
     local source = source

@@ -5,22 +5,20 @@ author 'Kypos'
 description 'kCore Framework | Alpha 0.0.1'
 version '0.0.1'
 
-ui_page 'web/build/index.html'
-
+use_experimental_fxv2_oal 'yes'
 lua54 'yes'
+
 shared_scripts {
-    'config.lua',
+    'libs/*.lua', 
     'shared/**/**'
 }
-
-
-
 
 client_scripts {
     'client/main.lua',
     'client/functions.lua',
     'client/load.lua',
     'client/events.lua',
+    'client/death.lua',
     'client/hud.lua',
     'client/interface.lua',
     'client/items.lua',
@@ -39,14 +37,15 @@ server_scripts {
     'server/inventory.lua',
     'server/items.lua',
     'server/callbacks.lua',
-    'server/jobs.lua'
+    'server/jobs.lua',
+    'server/permissions.lua',
 }
 
 
 files {
+    'config/client.lua',
+    'config/shared.lua',
     'shared/itemImages/*.png',
-    'web/build/index.html',
-	'web/build/**/*',
 }
 
 

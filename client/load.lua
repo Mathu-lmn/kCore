@@ -40,13 +40,15 @@ local function LoadCharacterAppearance(charData)
     end
 end
 
+RegisterNetEvent('kCore:updateData')
+AddEventHandler('kCore:updateData', function(data)
+    Core.Player = data
+    print(json.encode(data) .. ' FUCKING DATA')
+end)
+
 RegisterNetEvent('kCore:loadPlayer')
 AddEventHandler('kCore:loadPlayer', function(data, isNew)
     Core.Player = data
-
-    print(Core.Player.Appearance.model, 'MODEL DATA')
-
-    print(json.encode(data.position) .. ' FUCKING POSITION')
 
     if data.position then
         SetEntityCoords(PlayerPedId(), data.position.x, data.position.y, data.position.z, false, false, false, false)
@@ -69,7 +71,6 @@ AddEventHandler('refreshAppearance', function(AppearanceData)
         local ped = PlayerPedId()
         if DoesEntityExist(ped) then
             exports['kClothing']:ApplyAppearance(AppearanceData, ped)
-            print("Appearance refreshed successfully")
         end
     end
 end)

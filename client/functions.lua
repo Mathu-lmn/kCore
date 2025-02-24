@@ -6,6 +6,8 @@ function Core.Functions.GetPlayerMoney()
     return Core.Player.Money
 end
 
+
+
 function Core.Functions.GetPlayerStats()
     return Core.Player.Stats
 end
