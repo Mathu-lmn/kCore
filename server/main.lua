@@ -1,4 +1,3 @@
-
 Config = require("config.server") -- global it for now
 
 Core = {
@@ -12,8 +11,8 @@ exports('GetCore', function()
     return Core
 end) -- kekw
 
--- WE CAN DO  Core = exports["kCore"]:GetCore() (for now, exports will be prio but i've not got round to add every one yet.)
--- To use all the framework functions/getters in other resources. 
+-- WE CAN DO  Core = exports["kCore"]:GetCore() but it's not recommended, use the exports for functions when possible.
+-- exports["kCore"]:GetPlayer(source) is better than Core.Functions.GetPlayer(source) when in external resources (while in same resource we can use Core. stuff.)
 
 function Core.Functions.GetCharacterSlots(identifier, cb)
     MySQL.Async.fetchAll(
@@ -100,7 +99,6 @@ function Core.Functions.CreateCharacter(identifier, slot, data, source, cb)
         ['@inventory'] = json.encode(defaultInventory)
     }, function(rowsChanged)
         if rowsChanged > 0 then
-            print('test')
             Core.Functions.LoadCharacter(source, citizenid, true)
             cb(true, citizenid)
         else
@@ -125,28 +123,6 @@ function Core.Functions.GetPlayer(source)
 end
 
 exports('GetPlayer', Core.Functions.GetPlayer)
-
-local function formatItemData(item, sharedItem)
-    return {
-        id = item.id,
-        name = item.name,
-        image = sharedItem.image,
-        size = sharedItem.size or {
-            width = 1,
-            height = 1
-        },
-        position = item.position,
-        rotation = item.rotation or 0,
-        rarity = sharedItem.rarity or "common",
-        inventoryId = item.inventoryId,
-        isUnique = sharedItem.unique,
-        count = item.count or 1,
-        maxStack = sharedItem.maxStack or 64,
-        description = sharedItem.description,
-        type = sharedItem.type or "item",
-        shouldCloseInventory = sharedItem.shouldCloseInventory
-    }
-end
 
 function Core.Functions.LoadCharacter(source, citizenid, isNewCharacter)
     if not source or not citizenid then
@@ -382,6 +358,7 @@ function Core.Functions.UpdatePlayerAppearance(source, AppearanceData)
     end
     return false
 end
+
 
 AddEventHandler('playerDropped', function()
     local source = source

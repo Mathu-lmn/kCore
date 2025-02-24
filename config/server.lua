@@ -2,7 +2,7 @@ return {
     StartingMoney = 1000,
     StartingBank = 1000,
     SaveInterval = 10000 ,
-    StartingPosition = {
+    StartingPosition = { -- will be changed later on probably because of spawn point picker?
         x = -1042.0345,
         y = -2744.7874,
         z = 20.3594,

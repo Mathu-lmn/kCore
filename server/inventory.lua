@@ -2,16 +2,11 @@ Core.UsableItems = {}
 GroundInventories = {} -- keep within core, pr if needed
 vehicleInventories = {}
 local inventoryViewers = {}
+
 function Core.Functions.CreateUseableItem(itemName, cb)
     Core.UsableItems[itemName] = cb
 end
-
 exports('CreateUseableItem', Core.Functions.CreateUseableItem)
-
-
-
-
-
 
 function Core.Functions.AddItem(source, itemName, amount, metadata)
     local Player = Core.Functions.GetPlayer(source)
@@ -578,7 +573,7 @@ AddEventHandler('kCore:useItem', function(item, slot)
     end
 
     if not hasItem then
-        print("^1Player does not have this item in specified slot^7")
+        print("^1Player does not have this item in specified slot")
         return
     end
 
@@ -588,46 +583,6 @@ end)
 RegisterServerEvent('kCore:updateItemMetadata')
 AddEventHandler('kCore:updateItemMetadata', function(slot, metadata)
     Core.Functions.UpdateItemMetadata(source, slot, metadata)
-end)
-
-RegisterCommand('ground', function(source, args)
-    local src = source
-    local groundId = args[1]
-    if not groundId then
-        TriggerClientEvent('chat:addMessage', src, {
-            color = {255, 0, 0},
-            args = {'SYSTEM', 'Usage: /ground [id]'}
-        })
-        return
-    end
-
-    local Player = Core.Functions.GetPlayer(src)
-    if not Player then
-        return
-    end
-
-    if not groundId:match('^ground_') then
-        groundId = 'ground_' .. groundId
-    end
-
-    local groundInv = Core.Functions.GetInventoryById(groundId)
-    groundInv.viewers[src] = true
-
-    local inventoryData = {{
-        id = 'player',
-        name = 'Player Inventory',
-        rows = Player.Inventory.rows,
-        columns = Player.Inventory.columns,
-        items = Player.Inventory.items or {}
-    }, {
-        id = groundInv.id,
-        name = groundInv.name,
-        rows = groundInv.rows,
-        columns = groundInv.columns,
-        items = groundInv.items or {}
-    }}
-
-    TriggerClientEvent('kCore:openInventory', src, inventoryData)
 end)
 
 AddEventHandler('playerDropped', function()
