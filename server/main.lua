@@ -29,6 +29,7 @@ function Core.Functions.GetCharacterSlots(identifier, cb)
                 slots[char.char_slot] = {
                     id = char.id,
                     citizenid = char.citizenid,
+                    slot = char.char_slot,
                     Name = {
                         first_name = char.first_name,
                         last_name = char.last_name
