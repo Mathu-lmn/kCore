@@ -58,6 +58,7 @@ RegisterNetEvent('kCore:loadPlayer', function(data, isNew)
         exports["kClothing"]:ShowCharacterMenu(true, true)
     else
         LoadCharacterAppearance(data)
+        exports["kHUD"]:initHUD()
     end
 
     Core.Player.IsLoaded = true

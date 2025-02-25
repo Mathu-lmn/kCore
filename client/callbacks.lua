@@ -7,9 +7,10 @@ Core.Functions.TriggerServerCallback = function(name, cb, ...)
     TriggerServerEvent('kCore:triggerCallback', name, requestId, ...)
 end
 
-RegisterNetEvent('kCore:callbackResponse', function(requestId, ...)
-    local cb = CallbackResponses[requestId]
 
+RegisterNetEvent('kCore:callbackResponse', function(requestId, ...)
+    if source ~= 65535 then return end -- if not server
+    local cb = CallbackResponses[requestId]
     if cb then
         cb(...)
         CallbackResponses[requestId] = nil
