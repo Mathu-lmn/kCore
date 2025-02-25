@@ -19,6 +19,7 @@ local function LoadCharacterAppearance(charData)
                 ped = PlayerPedId()
             else
                 print("Invalid model:", model)
+                return
             end
         end
 
@@ -40,14 +41,12 @@ local function LoadCharacterAppearance(charData)
     end
 end
 
-RegisterNetEvent('kCore:updateData')
-AddEventHandler('kCore:updateData', function(data)
+RegisterNetEvent('kCore:updateData', function(data)
     Core.Player = data
     print(json.encode(data) .. ' FUCKING DATA')
 end)
 
-RegisterNetEvent('kCore:loadPlayer')
-AddEventHandler('kCore:loadPlayer', function(data, isNew)
+RegisterNetEvent('kCore:loadPlayer', function(data, isNew)
     Core.Player = data
 
     if data.position then
@@ -65,8 +64,7 @@ AddEventHandler('kCore:loadPlayer', function(data, isNew)
     DiscordStatus()
 end)
 
-RegisterNetEvent('refreshAppearance')
-AddEventHandler('refreshAppearance', function(AppearanceData)
+RegisterNetEvent('refreshAppearance', function(AppearanceData)
     if AppearanceData then
         local ped = PlayerPedId()
         if DoesEntityExist(ped) then
@@ -74,4 +72,3 @@ AddEventHandler('refreshAppearance', function(AppearanceData)
         end
     end
 end)
-

@@ -4,8 +4,7 @@ Core.Functions.RegisterServerCallback = function(name, cb)
     Callbacks[name] = cb
 end
 
-RegisterNetEvent('kCore:triggerCallback')
-AddEventHandler('kCore:triggerCallback', function(name, requestId, ...)
+RegisterNetEvent('kCore:triggerCallback', function(name, requestId, ...)
     local source = source
     local callbackfn = Callbacks[name]
 

@@ -6,8 +6,6 @@ function Core.Functions.GetPlayerMoney()
     return Core.Player.Money
 end
 
-
-
 function Core.Functions.GetPlayerStats()
     return Core.Player.Stats
 end
@@ -17,12 +15,11 @@ function Core.Functions.IsPlayerLoaded()
 end
 
 function DiscordStatus()
-    local playerCount = #GetActivePlayers()
-    local maxPlayers = GetConvarInt('sv_maxclients', 32) -- needs server state
-
     local presence = {
         state = "Visit kco.re for more info",
-        details = ("In development | Playing as %s %s"):format(
+        details = ("%s / %s | Playing as %s %s"):format(
+            tostring(GlobalState.numberPlayer),
+            tostring(GlobalState.maxClients),
             Core.Player.Name.first_name,
             Core.Player.Name.last_name
         ),
@@ -34,3 +31,11 @@ function DiscordStatus()
     SetDiscordRichPresenceAssetText(presence.largeImageText)
     SetRichPresence(presence.details)
 end
+
+AddStateBagChangeHandler('numberPlayer', 'global', function(bagName, key, value, reserved, replicated)
+    DiscordStatus()
+end)
+
+AddStateBagChangeHandler('maxClients', 'global', function(bagName, key, value, reserved, replicated)
+    DiscordStatus()
+end)
