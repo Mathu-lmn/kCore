@@ -7,8 +7,7 @@ Core.Functions.TriggerServerCallback = function(name, cb, ...)
     TriggerServerEvent('kCore:triggerCallback', name, requestId, ...)
 end
 
-RegisterNetEvent('kCore:callbackResponse')
-AddEventHandler('kCore:callbackResponse', function(requestId, ...)
+RegisterNetEvent('kCore:callbackResponse', function(requestId, ...)
     local cb = CallbackResponses[requestId]
 
     if cb then
@@ -18,5 +17,3 @@ AddEventHandler('kCore:callbackResponse', function(requestId, ...)
 end)
 
 exports('TriggerServerCallback', Core.Functions.TriggerServerCallback)
-
-

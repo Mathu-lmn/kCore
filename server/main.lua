@@ -360,7 +360,6 @@ function Core.Functions.UpdatePlayerAppearance(source, AppearanceData)
     return false
 end
 
-
 AddEventHandler('playerDropped', function()
     local source = source
     if Core.Players[source] then
@@ -368,7 +367,7 @@ AddEventHandler('playerDropped', function()
         Core.Players[source] = nil
     end
 end)
+
 function Core.Functions.IsPlayerInitialized(source)
     return Core.Players[source] ~= nil
 end
-
