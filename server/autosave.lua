@@ -1,5 +1,6 @@
 local saveMessageColor, errorMessageColor = "^2", "^1"
 local debug = true
+
 local os_date = os.date
 local string_rep = string.rep
 local string_format = string.format
