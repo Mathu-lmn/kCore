@@ -125,6 +125,34 @@ end
 
 exports('GetPlayer', Core.Functions.GetPlayer)
 
+
+function Core.Functions.GetPlayerByCitizenId(citizenid)
+    if not citizenid then
+        return nil
+    end
+
+    for _, player in pairs(Core.Players) do
+        if player.PlayerData.citizenid == citizenid then
+            return player
+        end
+    end
+
+    return nil
+end
+
+exports('GetPlayerByCitizenId', Core.Functions.GetPlayerByCitizenId)
+
+
+function Core.Functions.GetPlayers()
+    local players = {}
+    for _, player in pairs(Core.Players) do
+        table.insert(players, player)
+    end
+    return players
+end
+
+exports('GetPlayers', Core.Functions.GetPlayers)
+
 function Core.Functions.LoadCharacter(source, citizenid, isNewCharacter)
     if not source or not citizenid then
         print("^1Error: Invalid source or citizenid in LoadCharacter^7")
@@ -327,6 +355,8 @@ function SavePlayerData(source) -- rework eventually
     return false
 end
 
+exports('SavePlayerData', Core.Functions.SavePlayerData)
+
 function Core.Functions.SelectCharacter(id, slot, source, cb)
     local identifier = GetPlayerIdentifier(source)
 
@@ -350,6 +380,7 @@ function Core.Functions.SelectCharacter(id, slot, source, cb)
         end
     end)
 end
+
 exports('SelectCharacter', Core.Functions.SelectCharacter)
 
 function Core.Functions.UpdatePlayerAppearance(source, AppearanceData)
@@ -360,6 +391,8 @@ function Core.Functions.UpdatePlayerAppearance(source, AppearanceData)
     return false
 end
 
+exports('UpdatePlayerAppearance', Core.Functions.UpdatePlayerAppearance)
+
 
 AddEventHandler('playerDropped', function()
     local source = source
@@ -368,7 +401,10 @@ AddEventHandler('playerDropped', function()
         Core.Players[source] = nil
     end
 end)
+
 function Core.Functions.IsPlayerInitialized(source)
     return Core.Players[source] ~= nil
 end
+
+exports('IsPlayerInitialized', Core.Functions.IsPlayerInitialized)
 
