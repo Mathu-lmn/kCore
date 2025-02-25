@@ -1,7 +1,6 @@
 local currentWeapon = nil
 
-RegisterNetEvent('kCore:equipWeapon')
-AddEventHandler('kCore:equipWeapon', function(weaponData)
+RegisterNetEvent('kCore:equipWeapon', function(weaponData)
     local playerPed = PlayerPedId()
     local weaponHash = weaponData.weaponHash
 
@@ -15,8 +14,7 @@ AddEventHandler('kCore:equipWeapon', function(weaponData)
     currentWeapon = weaponData
 end)
 
-RegisterNetEvent('kCore:saveWeaponMetadata')
-AddEventHandler('kCore:saveWeaponMetadata', function(weaponHash)
+RegisterNetEvent('kCore:saveWeaponMetadata', function(weaponHash)
     if currentWeapon and currentWeapon.slot then
         local currentAmmo = GetAmmoInPedWeapon(PlayerPedId(), weaponHash)
 
@@ -39,8 +37,7 @@ AddEventHandler('kCore:saveWeaponMetadata', function(weaponHash)
     end
 end)
 
-RegisterNetEvent('kCore:updateWeaponAmmo')
-AddEventHandler('kCore:updateWeaponAmmo', function(newAmmo)
+RegisterNetEvent('kCore:updateWeaponAmmo', function(newAmmo)
     if currentWeapon then
         SetPedAmmo(PlayerPedId(), currentWeapon.weaponHash, newAmmo)
         TriggerServerEvent('kCore:updateItemMetadata', currentWeapon.slot, {
@@ -49,15 +46,13 @@ AddEventHandler('kCore:updateWeaponAmmo', function(newAmmo)
     end
 end)
 
-RegisterNetEvent('kCore:removeWeapon')
-AddEventHandler('kCore:removeWeapon', function(weaponHash)
+RegisterNetEvent('kCore:removeWeapon', function(weaponHash)
     local playerPed = PlayerPedId()
     RemoveWeaponFromPed(playerPed, weaponHash)
     currentWeapon = nil
 end)
 
-RegisterNetEvent('kCore:useAmmo')
-AddEventHandler('kCore:useAmmo', function(ammoData)
+RegisterNetEvent('kCore:useAmmo', function(ammoData)
     local playerPed = PlayerPedId()
 
     if not currentWeapon then

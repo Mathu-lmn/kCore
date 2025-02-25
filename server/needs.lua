@@ -52,8 +52,7 @@ function Core.Stats.AreNeedsInitialized(source)
     return Player and Player.Stats and Player.Stats.hunger ~= nil and Player.Stats.thirst ~= nil
 end
 
-RegisterServerEvent('kCore:updateStats')
-AddEventHandler('kCore:updateStats', function(item)
+RegisterNetEvent('kCore:updateStats', function(item)
     local Player = Core.Functions.GetPlayer(source)
     if not Player or not Player.Stats then
         return false

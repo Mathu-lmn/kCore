@@ -103,7 +103,7 @@ end
 exports('GetAllJobs', Core.Functions.GetAllJobs)
 
 
-RegisterNetEvent('playerJoining', function() -- perhaps another way?
+AddEventHandler('playerJoining', function() -- perhaps another way?
     local source = source
     TriggerClientEvent('kCore:syncJobs', source, Shared.Jobs)
 end)

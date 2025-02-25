@@ -119,7 +119,6 @@ RegisterCommand('checkmoneystate', function(source)
     end
 end)
 
-
 RegisterCommand('createPolice', function(source, args)
     if source ~= 0 and not Core.Functions.HasPermission(source, "command.jobs") then
         TriggerClientEvent('chat:addMessage', source, {
@@ -223,8 +222,6 @@ RegisterCommand('setjob', function(source, args)
         end
     end
 end, false)
-
-
 
 RegisterCommand('ground', function(source, args)
     local src = source
