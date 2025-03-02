@@ -224,10 +224,10 @@ function Core.Functions.LoadCharacter(source, citizenid, isNewCharacter)
                 UpdateAppearance = function(AppearanceData)
                     local safeAppearance = {
                         model = AppearanceData.model or self.Appearance.model,
-                        clothing = AppearanceData.clothing or {},
-                        genetics = AppearanceData.genetics or {},
-                        faceFeatures = AppearanceData.faceFeatures or {},
-                        headOverlays = AppearanceData.headOverlays or {}
+                        clothing = AppearanceData.clothing or self.Appearance.clothing,
+                        genetics = AppearanceData.genetics or self.Appearance.genetics,
+                        faceFeatures = AppearanceData.faceFeatures or self.Appearance.faceFeatures,
+                        headOverlays = AppearanceData.headOverlays or self.Appearance.headOverlays
                     }
                     self.Appearance = safeAppearance
                     self.Functions.Save()
