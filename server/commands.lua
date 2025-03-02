@@ -115,7 +115,7 @@ RegisterCommand('checkmoneystate', function(source)
         print("Bank:", Player.Money.bank)
         print("Raw Money Object:", json.encode(Player.Money))
     else
-        print("^1Error: No player found for source^7:", source)
+        print("^1Error: No player found for source: " .. source .. "^7")
     end
 end)
 

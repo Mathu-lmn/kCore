@@ -19,14 +19,8 @@ function Core.Functions.AddMoney(source, amount, moneytype)
 
     Player.Functions.Save()
 
-    TriggerClientEvent('kCore:updateMoney', source, {
-        cash = Player.Money.cash,
-        bank = Player.Money.bank
-    }, moneytype)
-    TriggerEvent('kCore:updateMoney', source, {
-        cash = Player.Money.cash,
-        bank = Player.Money.bank
-    }, moneytype)
+    TriggerClientEvent('kCore:updateMoney', source, Player.Money, moneytype)
+    TriggerEvent('kCore:updateMoney', source, Player.Money, moneytype)
 
     return true
 end
@@ -60,14 +54,8 @@ function Core.Functions.RemoveMoney(source, amount, moneytype)
 
     Player.Functions.Save()
 
-    TriggerClientEvent('kCore:updateMoney', source, {
-        cash = Player.Money.cash,
-        bank = Player.Money.bank
-    }, moneytype)
-    TriggerEvent('kCore:updateMoney', source, {
-        cash = Player.Money.cash,
-        bank = Player.Money.bank
-    }, moneytype)
+    TriggerClientEvent('kCore:updateMoney', source, Player.Money, moneytype)
+    TriggerEvent('kCore:updateMoney', source, Player.Money, moneytype)
 
     return true
 end
@@ -176,6 +164,7 @@ function Core.Functions.AddAccountMoney(account, amount)
         TriggerEvent('kCore:updateAccountMoney', account, newBalance, rs[1].balance)
         return newBalance
     end
+    return false
 end
 
 exports('AddAccountMoney', Core.Functions.AddAccountMoney)
@@ -193,10 +182,14 @@ function Core.Functions.RemoveAccountMoney(account, amount)
     local rs = MySQL.query.await('SELECT balance FROM bank_accounts WHERE owner = ? LIMIT 1', {account})
     if rs[1] then
         local newBalance = rs[1].balance - amount
+        if newBalance < 0 then
+            return false
+        end
         MySQL.query.await('UPDATE bank_accounts SET balance = ? WHERE owner = ?', {newBalance, account})
         TriggerEvent('kCore:updateAccountMoney', account, newBalance, rs[1].balance)
         return newBalance
     end
+    return false
 end
 
 exports('RemoveAccountMoney', Core.Functions.RemoveAccountMoney)
