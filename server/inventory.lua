@@ -164,6 +164,8 @@ function Core.Functions.RemoveItem(source, itemName, amount, slot)
     return false
 end
 
+exports('RemoveItem', Core.Functions.RemoveItem)
+
 function Core.Functions.UpdateItemMetadata(source, slot, metadata)
     local Player = Core.Functions.GetPlayer(source)
     if not Player then
@@ -179,6 +181,9 @@ function Core.Functions.UpdateItemMetadata(source, slot, metadata)
     end
     return false
 end
+
+exports('UpdateItemMetadata', Core.Functions.UpdateItemMetadata)
+
 
 function Core.Functions.CreateGroundInventory(src, id)
     if not id then return nil end
@@ -200,10 +205,14 @@ function Core.Functions.CreateGroundInventory(src, id)
     return GroundInventories[id]
 end
 
+exports('CreateGroundInventory', Core.Functions.CreateGroundInventory)
+
 function Core.Functions.GetInventoryById(id)
     if not id then return nil end
     return GroundInventories[id]
 end
+
+exports('GetInventoryById', Core.Functions.GetInventoryById)
 
 function Core.Functions.GetVehicleInventory(inventoryId, label)
     if not vehicleInventories[inventoryId] then
@@ -217,7 +226,9 @@ function Core.Functions.GetVehicleInventory(inventoryId, label)
         }
     end
     return vehicleInventories[inventoryId]
-end exports('GetVehicleInventory', Core.Functions.GetVehicleInventory)
+end 
+
+exports('GetVehicleInventory', Core.Functions.GetVehicleInventory)
 
 
 function Core.Functions.MoveInventoryItem(src, item, sourceId, targetId)
@@ -401,6 +412,8 @@ function Core.Functions.MoveInventoryItem(src, item, sourceId, targetId)
     return true, responseData
 end
 
+exports('MoveInventoryItem', Core.Functions.MoveInventoryItem)
+
 function Core.Functions.SplitInventoryItem(source, item, splitAmount)
     local Player = Core.Functions.GetPlayer(source)
     if not Player or not item then
@@ -545,6 +558,8 @@ function Core.Functions.SplitInventoryItem(source, item, splitAmount)
     return true
 end
 
+exports('SplitInventoryItem', Core.Functions.SplitInventoryItem)
+
 RegisterNetEvent('kCore:useItem', function(item, slot)
     local src = source
     local Player = Core.Functions.GetPlayer(src)
@@ -620,6 +635,8 @@ function Core.Functions.SaveVehicleInventory(invId, inventory)
     return true
 end
 
+exports('SaveVehicleInventory', Core.Functions.SaveVehicleInventory)
+
 function Core.Functions.LoadVehicleInventory(invId)
     if not plate then return nil end
     
@@ -640,6 +657,9 @@ function Core.Functions.LoadVehicleInventory(invId)
     return Citizen.Await(promise)
 end
 
+exports('LoadVehicleInventory', Core.Functions.LoadVehicleInventory)
+
+
 function Core.Functions.AddInventoryViewer(inventoryId, playerId)
     if not inventoryViewers[inventoryId] then
         inventoryViewers[inventoryId] = {}
@@ -647,6 +667,8 @@ function Core.Functions.AddInventoryViewer(inventoryId, playerId)
     inventoryViewers[inventoryId][playerId] = true
     print(json.encode(inventoryViewers))
 end
+
+exports('AddInventoryViewer', Core.Functions.AddInventoryViewer)
 
 function Core.Functions.RemoveInventoryViewer(inventoryId, playerId)
     if inventoryViewers[inventoryId] then
@@ -658,6 +680,10 @@ function Core.Functions.RemoveInventoryViewer(inventoryId, playerId)
     end
 end
 
+exports('RemoveInventoryViewer', Core.Functions.RemoveInventoryViewer)
+
 function Core.Functions.GetInventoryViewers(inventoryId)
     return inventoryViewers[inventoryId] or {}
 end
+
+exports('GetInventoryViewers', Core.Functions.GetInventoryViewers)

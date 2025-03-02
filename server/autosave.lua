@@ -1,98 +1,91 @@
-local saveMessageColor = "^2"
-local errorMessageColor = "^1"
+local saveMessageColor, errorMessageColor = "^2", "^1"
 local debug = true
 
-local saveStats = {
-    attempts = 0,
-    successes = 0,
-    failures = 0,
-    lastError = nil
-}
+local os_date = os.date
+local string_rep = string.rep
+local string_format = string.format
+local table_insert = table.insert
+local pairs = pairs
+local tostring = tostring
+local pcall = pcall
+local print = print
 
 local function GetTimestamp()
-    return os.date("%Y-%m-%d %H:%M:%S")
+    return os_date("%Y-%m-%d %H:%M:%S")
 end
 
 local function FormatNumber(number)
     local formatted = tostring(number)
+    local k
     while true do
         formatted, k = string.gsub(formatted, "^(-?%d+)(%d%d%d)", '%1,%2')
-        if k == 0 then
-            break
-        end
+        if k == 0 then break end
     end
     return formatted
 end
 
 CreateThread(function()
-    while true do
-        Wait(Config.SaveInterval)
+    local saveInterval = Config.SaveInterval
+    local dashLine = string_rep("-", 70)
 
-        local playerCount = 0
-        local totalCash = 0
-        local totalBank = 0
-        local failedSaves = 0
+    while true do
+        Wait(saveInterval)
+
+        local playerCount, totalCash, totalBank, failedSaves = 0, 0, 0, 0
         local failedPlayers = {}
         local saveTime = GetTimestamp()
 
-        if not Core.Players then
-            goto continue
-        end
+        if not Core.Players then goto continue end
 
         for source, playerData in pairs(Core.Players) do
-            if not playerData or not playerData.Functions or not playerData.Functions.Save then
-                goto continue_player
+            if playerData and playerData.Functions and playerData.Functions.Save then
+                local success, error = pcall(playerData.Functions.Save)
+
+                if success then
+                    playerCount = playerCount + 1
+                    totalCash = totalCash + (playerData.Money and playerData.Money.cash or 0)
+                    totalBank = totalBank + (playerData.Money and playerData.Money.bank or 0)
+                else
+                    failedSaves = failedSaves + 1
+                    failedPlayers[#failedPlayers + 1] = {source = source, error = error}
+                    print(errorMessageColor .. "Error saving player: " .. source .. " - " .. tostring(error) .. "^7")
+                end
             end
-
-            local success, error = pcall(function()
-                return playerData.Functions.Save()
-            end)
-
-            if success then
-                playerCount = playerCount + 1
-                totalCash = totalCash + (playerData.Money and playerData.Money.cash or 0)
-                totalBank = totalBank + (playerData.Money and playerData.Money.bank or 0)
-            else
-                failedSaves = failedSaves + 1
-                table.insert(failedPlayers, {
-                    source = source,
-                    error = error
-                })
-                print("^1Error saving player^7:", source, error)
-            end
-
-            ::continue_player::
         end
 
         if playerCount > 0 or failedSaves > 0 then
-            print(string.rep("-", 70))
-            print(saveMessageColor .. "Auto-Save Report - " .. saveTime .. "^7")
-            print(string.rep("-", 70))
+            local report = {
+                dashLine,
+                saveMessageColor .. "Auto-Save Report - " .. saveTime .. "^7",
+                dashLine
+            }
 
             if playerCount > 0 then
-                print(saveMessageColor .. "Successfully saved data for " .. playerCount .. " player(s)^7")
+                report[#report + 1] = saveMessageColor .. "Successfully saved data for " .. playerCount .. " player(s)^7"
 
                 if debug then
-                    print("Total Cash in kCore: $" .. FormatNumber(totalCash))
-                    print("Total Bank in kCore: $" .. FormatNumber(totalBank))
-                    print("Total Money in kCore: $" .. FormatNumber(totalCash + totalBank))
+                    report[#report + 1] = "Total Cash in kCore: $" .. FormatNumber(totalCash)
+                    report[#report + 1] = "Total Bank in kCore: $" .. FormatNumber(totalBank)
+                    report[#report + 1] = "Total Money in kCore: $" .. FormatNumber(totalCash + totalBank)
                 end
             end
 
             if failedSaves > 0 then
-                print(errorMessageColor .. "Failed to save data for " .. failedSaves .. " player(s)^7")
+                report[#report + 1] = errorMessageColor .. "Failed to save data for " .. failedSaves .. " player(s)^7"
                 if debug then
                     for _, failedPlayer in ipairs(failedPlayers) do
                         local identifier = GetPlayerIdentifier(failedPlayer.source)
-                        print(errorMessageColor .. "Failed player: " .. failedPlayer.source .. " (ID: " ..
-                                  (identifier or "unknown") .. ") - Error: " .. tostring(failedPlayer.error) .. "^7")
+                        report[#report + 1] = string_format("%sFailed player: %s (ID: %s) - Error: %s^7",
+                            errorMessageColor, failedPlayer.source, identifier or "unknown", tostring(failedPlayer.error))
                     end
                 end
             end
 
-            print(string.rep("-", 70))
+            report[#report + 1] = dashLine
+            print(table.concat(report, "\n"))
         end
 
         ::continue::
     end
 end)
+
