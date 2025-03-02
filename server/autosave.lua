@@ -58,7 +58,7 @@ CreateThread(function()
                     source = source,
                     error = error
                 })
-                print("^1Error saving player^7:", source, error)
+                print("^1Error saving player:", source, error, "^7")
             end
 
             ::continue_player::

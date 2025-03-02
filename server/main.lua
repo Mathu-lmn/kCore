@@ -206,7 +206,7 @@ function Core.Functions.LoadCharacter(source, citizenid, isNewCharacter)
 
                 UpdateJob = function(job, grade)
                     if not Shared.Jobs[job] then
-                        print("^1Error: Job does not exist^7:", job)
+                        print("^1Error: Job does not exist: " .. job .. "^7")
                         return false
                     elseif not Shared.Jobs[job][grade] then
                         print("^1Error: Grade " .. grade .. " does not exist for job: " .. job .. "^7")
@@ -278,7 +278,7 @@ function Core.Functions.LoadCharacter(source, citizenid, isNewCharacter)
             TriggerEvent('kCore:loadPlayer', source, self, isNewCharacter)
             return true
         else
-            print('^1Error: No character found for citizenid^7:', citizenid)
+            print('^1Error: No character found for citizenid: ' .. citizenid .. '^7')
             return false
         end
     end)
@@ -333,7 +333,7 @@ function Core.Functions.SelectCharacter(id, slot, source, cb)
     local identifier = GetPlayerIdentifier(source)
 
     if not identifier then
-        print("^1Error: No identifier found for source^7:", source)
+        print("^1Error: No identifier found for source: " .. source .. "^7")
         return
     end
 
