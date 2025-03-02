@@ -208,6 +208,8 @@ function Core.Functions.LoadCharacter(source, citizenid, isNewCharacter)
                     if not Shared.Jobs[job] then
                         print("^1Error: Job does not exist^7:", job)
                         return false
+                    elseif not Shared.Jobs[job][grade] then
+                        print("^1Error: Grade " .. grade .. " does not exist for job: " .. job .. "^7")
                     end
 
                     self.Meta.Job.name = job
