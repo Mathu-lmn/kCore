@@ -21,9 +21,6 @@ function Core.Functions.GetCharacterSlots(identifier, cb)
             ['@identifier'] = identifier
         }, function(results)
             local slots = {}
-            for i = 1, Config.MaxCharacterSlots do
-                slots[i] = nil
-            end
 
             for _, char in ipairs(results) do
                 slots[char.char_slot] = {
