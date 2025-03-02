@@ -144,11 +144,7 @@ exports('GetPlayerByCitizenId', Core.Functions.GetPlayerByCitizenId)
 
 
 function Core.Functions.GetPlayers()
-    local players = {}
-    for _, player in pairs(Core.Players) do
-        table.insert(players, player)
-    end
-    return players
+    return Core.Players
 end
 
 exports('GetPlayers', Core.Functions.GetPlayers)
