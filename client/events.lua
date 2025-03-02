@@ -1,5 +1,4 @@
-RegisterNetEvent('kCore:updateNeeds')
-AddEventHandler('kCore:updateNeeds', function(newHunger, newThirst)
+RegisterNetEvent('kCore:updateNeeds', function(newHunger, newThirst)
     Core.Player.Stats.hunger = newHunger
     Core.Player.Stats.thirst = newThirst
     exports['kNotify']:Notify({
@@ -12,8 +11,7 @@ AddEventHandler('kCore:updateNeeds', function(newHunger, newThirst)
     })
 end)
 
-RegisterNetEvent('kCore:updateMoney')
-AddEventHandler('kCore:updateMoney', function(moneyData)
+RegisterNetEvent('kCore:updateMoney', function(moneyData)
     Core.Player.Money = moneyData
     exports["kNotify"]:Notify({
         type = "cash",
@@ -25,8 +23,7 @@ AddEventHandler('kCore:updateMoney', function(moneyData)
     })
 end)
 
-RegisterNetEvent('kCore:drink')
-AddEventHandler('kCore:drink', function(item)
+RegisterNetEvent('kCore:drink', function(item)
     exports['kCore']:StartProgress({
         duration = 3000,
         label = "Drinking " .. string.upper(item.name),
@@ -36,8 +33,7 @@ AddEventHandler('kCore:drink', function(item)
     end)
 end)
 
-RegisterNetEvent('kCore:notification')
-AddEventHandler('kCore:notification', function(message)
+RegisterNetEvent('kCore:notification', function(message)
     exports['kNotify']:Notify({
         type = "information",
         title = "kCore",

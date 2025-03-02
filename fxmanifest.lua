@@ -47,5 +47,3 @@ files {
     'config/shared.lua',
     'shared/itemImages/*.png',
 }
-
-

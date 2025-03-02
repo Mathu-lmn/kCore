@@ -560,8 +560,7 @@ end
 
 exports('SplitInventoryItem', Core.Functions.SplitInventoryItem)
 
-RegisterServerEvent('kCore:useItem')
-AddEventHandler('kCore:useItem', function(item, slot)
+RegisterNetEvent('kCore:useItem', function(item, slot)
     local src = source
     local Player = Core.Functions.GetPlayer(src)
 
@@ -595,8 +594,7 @@ AddEventHandler('kCore:useItem', function(item, slot)
     Core.UsableItems[item.name](src, item, slot)
 end)
 
-RegisterServerEvent('kCore:updateItemMetadata')
-AddEventHandler('kCore:updateItemMetadata', function(slot, metadata)
+RegisterNetEvent('kCore:updateItemMetadata', function(slot, metadata)
     Core.Functions.UpdateItemMetadata(source, slot, metadata)
 end)
 
@@ -660,6 +658,7 @@ function Core.Functions.LoadVehicleInventory(invId)
 end
 
 exports('LoadVehicleInventory', Core.Functions.LoadVehicleInventory)
+
 
 function Core.Functions.AddInventoryViewer(inventoryId, playerId)
     if not inventoryViewers[inventoryId] then
