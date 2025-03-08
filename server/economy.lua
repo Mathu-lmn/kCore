@@ -17,18 +17,21 @@ function Core.Functions.AddMoney(source, amount, moneytype)
         return false
     end
 
-    Player.Functions.Save()
+    if Player.Functions.UpdateMoney(Player.Money) then
 
-    TriggerClientEvent('kCore:updateMoney', source, {
-        cash = Player.Money.cash,
-        bank = Player.Money.bank
-    }, moneytype)
-    TriggerEvent('kCore:updateMoney', source, {
-        cash = Player.Money.cash,
-        bank = Player.Money.bank
-    }, moneytype)
+        TriggerClientEvent('kCore:updateMoney', source, {
+            cash = Player.Money.cash,
+            bank = Player.Money.bank
+        }, moneytype)
+        TriggerEvent('kCore:updateMoney', source, {
+            cash = Player.Money.cash,
+            bank = Player.Money.bank
+        }, moneytype)
 
-    return true
+        return true
+    else
+        return false
+    end
 end
 
 function Core.Functions.RemoveMoney(source, amount, moneytype)
@@ -58,18 +61,21 @@ function Core.Functions.RemoveMoney(source, amount, moneytype)
         return false
     end
 
-    Player.Functions.Save()
+    if Player.Functions.UpdateMoney(Player.Money) then
 
-    TriggerClientEvent('kCore:updateMoney', source, {
-        cash = Player.Money.cash,
-        bank = Player.Money.bank
-    }, moneytype)
-    TriggerEvent('kCore:updateMoney', source, {
-        cash = Player.Money.cash,
-        bank = Player.Money.bank
-    }, moneytype)
+        TriggerClientEvent('kCore:updateMoney', source, {
+            cash = Player.Money.cash,
+            bank = Player.Money.bank
+        }, moneytype)
+        TriggerEvent('kCore:updateMoney', source, {
+            cash = Player.Money.cash,
+            bank = Player.Money.bank
+        }, moneytype)
 
-    return true
+        return true
+    else
+        return false
+    end
 end
 
 function Core.Functions.TransferMoney(source, target, amount)
