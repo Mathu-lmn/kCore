@@ -214,17 +214,6 @@ function Core.Functions.LoadCharacter(source, citizenid, isNewCharacter)
                     end
                 end,
 
-                UpdateMoney = function(moneytype, amount)
-                    if moneytype == "cash" then
-                        self.Money.cash = amount
-                    elseif moneytype == "bank" then
-                        self.Money.bank = amount
-                    elseif moneytype == "black_money" then
-                        self.Money.black_money = amount
-                    end
-                    self.Functions.Save()
-                end,
-
                 UpdateJob = function(job, grade)
                     if not Shared.Jobs[job] then
                         print("^1Error: Job does not exist: " .. job .. "^7")
@@ -286,6 +275,14 @@ function Core.Functions.LoadCharacter(source, citizenid, isNewCharacter)
                         items = self.Inventory.items
                     })
                     return true
+                end,
+
+                UpdateMoney = function(moneyData) -- seperate function for updating money, do this for most other things
+                    if MySQL.query.await('UPDATE characters SET money = ? WHERE citizenid = ?', {json.encode(moneyData), self.citizenid}) then
+                        return true
+                    else
+                        return false
+                    end
                 end
             }
 
@@ -385,8 +382,34 @@ function Core.Functions.UpdatePlayerAppearance(source, AppearanceData)
     end
     return false
 end
-
 exports('UpdatePlayerAppearance', Core.Functions.UpdatePlayerAppearance)
+
+
+function Core.Functions.DeleteCharacter(identifier, slot, source, cb)
+    if not identifier then
+        print("^1Error: No identifier provided for deletion^7")
+        if cb then cb(false, "No identifier provided") end
+        return
+    end
+
+    MySQL.Async.execute('DELETE FROM characters WHERE identifier = @identifier AND char_slot = @slot', {
+        ['@identifier'] = identifier,
+        ['@slot'] = slot
+    }, function(rowsChanged)
+        if rowsChanged > 0 then
+            print("^2Character deleted for slot:^7", slot)
+            if cb then cb(true) end
+        else
+            print("^1Failed to delete character for slot:^7", slot)
+            if cb then cb(false, "Failed to delete character") end
+        end
+    end)
+end
+
+exports('DeleteCharacter', Core.Functions.DeleteCharacter)
+
+
+
 
 
 AddEventHandler('playerDropped', function()
