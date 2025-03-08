@@ -21,9 +21,6 @@ function Core.Functions.GetCharacterSlots(identifier, cb)
             ['@identifier'] = identifier
         }, function(results)
             local slots = {}
-            for i = 1, Config.MaxCharacterSlots do
-                slots[i] = nil
-            end
 
             for _, char in ipairs(results) do
                 slots[char.char_slot] = {
@@ -125,6 +122,30 @@ end
 
 exports('GetPlayer', Core.Functions.GetPlayer)
 
+
+function Core.Functions.GetPlayerByCitizenId(citizenid)
+    if not citizenid then
+        return nil
+    end
+
+    for _, player in pairs(Core.Players) do
+        if player.PlayerData.citizenid == citizenid then
+            return player
+        end
+    end
+
+    return nil
+end
+
+exports('GetPlayerByCitizenId', Core.Functions.GetPlayerByCitizenId)
+
+
+function Core.Functions.GetPlayers()
+    return Core.Players
+end
+
+exports('GetPlayers', Core.Functions.GetPlayers)
+
 function Core.Functions.LoadCharacter(source, citizenid, isNewCharacter)
     if not source or not citizenid then
         print("^1Error: Invalid source or citizenid in LoadCharacter^7")
@@ -195,8 +216,10 @@ function Core.Functions.LoadCharacter(source, citizenid, isNewCharacter)
 
                 UpdateJob = function(job, grade)
                     if not Shared.Jobs[job] then
-                        print("^1Error: Job does not exist^7:", job)
+                        print("^1Error: Job does not exist: " .. job .. "^7")
                         return false
+                    elseif not Shared.Jobs[job][grade] then
+                        print("^1Error: Grade " .. grade .. " does not exist for job: " .. job .. "^7")
                     end
 
                     self.Meta.Job.name = job
@@ -211,10 +234,10 @@ function Core.Functions.LoadCharacter(source, citizenid, isNewCharacter)
                 UpdateAppearance = function(AppearanceData)
                     local safeAppearance = {
                         model = AppearanceData.model or self.Appearance.model,
-                        clothing = AppearanceData.clothing or {},
-                        genetics = AppearanceData.genetics or {},
-                        faceFeatures = AppearanceData.faceFeatures or {},
-                        headOverlays = AppearanceData.headOverlays or {}
+                        clothing = AppearanceData.clothing or self.Appearance.clothing,
+                        genetics = AppearanceData.genetics or self.Appearance.genetics,
+                        faceFeatures = AppearanceData.faceFeatures or self.Appearance.faceFeatures,
+                        headOverlays = AppearanceData.headOverlays or self.Appearance.headOverlays
                     }
                     self.Appearance = safeAppearance
                     self.Functions.Save()
@@ -273,7 +296,7 @@ function Core.Functions.LoadCharacter(source, citizenid, isNewCharacter)
             TriggerEvent('kCore:loadPlayer', source, self, isNewCharacter)
             return true
         else
-            print('^1Error: No character found for citizenid^7:', citizenid)
+            print('^1Error: No character found for citizenid: ' .. citizenid .. '^7')
             return false
         end
     end)
@@ -324,11 +347,13 @@ function SavePlayerData(source) -- rework eventually
     return false
 end
 
+exports('SavePlayerData', Core.Functions.SavePlayerData)
+
 function Core.Functions.SelectCharacter(id, slot, source, cb)
     local identifier = GetPlayerIdentifier(source)
 
     if not identifier then
-        print("^1Error: No identifier found for source^7:", source)
+        print("^1Error: No identifier found for source: " .. source .. "^7")
         return
     end
 
@@ -347,6 +372,7 @@ function Core.Functions.SelectCharacter(id, slot, source, cb)
         end
     end)
 end
+
 exports('SelectCharacter', Core.Functions.SelectCharacter)
 
 function Core.Functions.UpdatePlayerAppearance(source, AppearanceData)
@@ -356,6 +382,7 @@ function Core.Functions.UpdatePlayerAppearance(source, AppearanceData)
     end
     return false
 end
+exports('UpdatePlayerAppearance', Core.Functions.UpdatePlayerAppearance)
 
 
 function Core.Functions.DeleteCharacter(identifier, slot, source, cb)
@@ -382,6 +409,9 @@ end
 exports('DeleteCharacter', Core.Functions.DeleteCharacter)
 
 
+
+
+
 AddEventHandler('playerDropped', function()
     local source = source
     if Core.Players[source] then
@@ -393,3 +423,6 @@ end)
 function Core.Functions.IsPlayerInitialized(source)
     return Core.Players[source] ~= nil
 end
+
+exports('IsPlayerInitialized', Core.Functions.IsPlayerInitialized)
+

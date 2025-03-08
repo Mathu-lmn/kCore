@@ -56,12 +56,12 @@ function Core.Functions.SetPlayerJob(source, job, grade)
     end
 
     if not Shared.Jobs[job] then
-        print("^1Error: Job does not exist^7:", job, grade)
+        print("^1Error: Job does not exist:", job, grade, "^7")
         return false
     end
 
     if not Shared.Jobs[job].grades[grade] then
-        print("^1Error: Job grade does not exist^7:", job, grade)
+        print("^1Error: Job grade does not exist:", job, grade, "^7")
         return false
     end
 
@@ -79,7 +79,7 @@ exports('SetPlayerJob', Core.Functions.SetPlayerJob)
 
 function Core.Functions.GetJob(job)
     if not Shared.Jobs[job] then
-        print("^1Error: Job does not exist^7:", job)
+        print("^1Error: Job does not exist^7: " .. job .. "^7")
         return false
     end
 

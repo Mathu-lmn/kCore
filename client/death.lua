@@ -53,24 +53,24 @@ function IsDead(state)
 end
 
 
-function ReviveUser()
-    local playerPed = PlayerPedId()
-    local pos = GetEntityCoords(playerPed, true)
+-- function ReviveUser()
+--     local playerPed = PlayerPedId()
+--     local pos = GetEntityCoords(playerPed, true)
     
-    exports['kHUD']:UpdateRespawnProgress(0)
-    exports['kHUD']:UpdateCanRespawn(false)
+--     exports['kHUD']:UpdateRespawnProgress(0)
+--     exports['kHUD']:UpdateCanRespawn(false)
     
-    NetworkResurrectLocalPlayer(pos.x, pos.y, pos.z, GetEntityHeading(playerPed), true, false)
-    SetEntityHealth(playerPed, 200) -- Fixed: was using 'player' instead of 'playerPed'
-    ClearPedBloodDamage(playerPed) -- Fixed: was using 'player' instead of 'playerPed'
+--     NetworkResurrectLocalPlayer(pos.x, pos.y, pos.z, GetEntityHeading(playerPed), true, false)
+--     SetEntityHealth(playerPed, 200) -- Fixed: was using 'player' instead of 'playerPed'
+--     ClearPedBloodDamage(playerPed) -- Fixed: was using 'player' instead of 'playerPed'
     
-    isDead = false
-    holdStartTime = 0
-    exports['kHUD']:UpdateDeathState(isDead, 0)
-end
+--     isDead = false
+--     holdStartTime = 0
+--     exports['kHUD']:UpdateDeathState(isDead, 0)
+-- end
 
-exports('ReviveUser', ReviveUser)
+-- exports('ReviveUser', ReviveUser)
 
-RegisterCommand('revive', function()
-    ReviveUser()
-end, false)
+-- RegisterCommand('revive', function()
+--     ReviveUser()
+-- end, false)

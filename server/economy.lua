@@ -17,6 +17,7 @@ function Core.Functions.AddMoney(source, amount, moneytype)
         return false
     end
 
+
     if Player.Functions.UpdateMoney(Player.Money) then
 
         TriggerClientEvent('kCore:updateMoney', source, {
@@ -62,7 +63,6 @@ function Core.Functions.RemoveMoney(source, amount, moneytype)
     end
 
     if Player.Functions.UpdateMoney(Player.Money) then
-
         TriggerClientEvent('kCore:updateMoney', source, {
             cash = Player.Money.cash,
             bank = Player.Money.bank
@@ -71,7 +71,6 @@ function Core.Functions.RemoveMoney(source, amount, moneytype)
             cash = Player.Money.cash,
             bank = Player.Money.bank
         }, moneytype)
-
         return true
     else
         return false
@@ -182,6 +181,7 @@ function Core.Functions.AddAccountMoney(account, amount)
         TriggerEvent('kCore:updateAccountMoney', account, newBalance, rs[1].balance)
         return newBalance
     end
+    return false
 end
 
 exports('AddAccountMoney', Core.Functions.AddAccountMoney)
@@ -199,10 +199,14 @@ function Core.Functions.RemoveAccountMoney(account, amount)
     local rs = MySQL.query.await('SELECT balance FROM bank_accounts WHERE owner = ? LIMIT 1', {account})
     if rs[1] then
         local newBalance = rs[1].balance - amount
+        if newBalance < 0 then
+            return false
+        end
         MySQL.query.await('UPDATE bank_accounts SET balance = ? WHERE owner = ?', {newBalance, account})
         TriggerEvent('kCore:updateAccountMoney', account, newBalance, rs[1].balance)
         return newBalance
     end
+    return false
 end
 
 exports('RemoveAccountMoney', Core.Functions.RemoveAccountMoney)
