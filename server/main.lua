@@ -357,7 +357,7 @@ function Core.Functions.UpdatePlayerAppearance(source, AppearanceData)
     return false
 end
 
--- Add new deletion function within Core.Functions
+
 function Core.Functions.DeleteCharacter(identifier, slot, source, cb)
     if not identifier then
         print("^1Error: No identifier provided for deletion^7")
@@ -382,7 +382,6 @@ end
 exports('DeleteCharacter', Core.Functions.DeleteCharacter)
 
 
-
 AddEventHandler('playerDropped', function()
     local source = source
     if Core.Players[source] then
@@ -390,7 +389,7 @@ AddEventHandler('playerDropped', function()
         Core.Players[source] = nil
     end
 end)
+
 function Core.Functions.IsPlayerInitialized(source)
     return Core.Players[source] ~= nil
 end
-

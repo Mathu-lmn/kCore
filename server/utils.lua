@@ -22,3 +22,14 @@ function Core.Functions.GenerateUID()
 
     return uid
 end
+
+AddEventHandler('playerJoining', function()
+    Wait(0) -- wait 1 frame until the player indices are updated
+    GlobalState.numberPlayer = GetNumPlayerIndices()
+end)
+
+AddEventHandler('playerDropped', function()
+	GlobalState.numberPlayer = GetNumPlayerIndices()
+end)
+
+GlobalState.maxClients = GetConvar('sv_maxclients', 0)

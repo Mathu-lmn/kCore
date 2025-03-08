@@ -64,8 +64,7 @@ local function RegisterAmmoHandlers()
     end
 end
 
-RegisterServerEvent('kCore:ammoUsed')
-AddEventHandler('kCore:ammoUsed', function(ammoData, weaponSlot, currentAmmo)
+RegisterNetEvent('kCore:ammoUsed', function(ammoData, weaponSlot, currentAmmo)
     local src = source
 
     if Core.Functions.RemoveItem(src, ammoData.name, 1, ammoData.slot) then
@@ -88,11 +87,12 @@ AddEventHandler('kCore:ammoUsed', function(ammoData, weaponSlot, currentAmmo)
         end
     end
 end)
-RegisterNetEvent('kCore:updateWeaponAmmo')
-AddEventHandler('kCore:updateWeaponAmmo', function(newAmmo)
+
+RegisterNetEvent('kCore:updateWeaponAmmo', function(newAmmo)
     if currentWeapon then
         SetPedAmmo(PlayerPedId(), currentWeapon.weaponHash, newAmmo)
     end
 end)
+
 RegisterAmmoHandlers()
 RegisterWeaponHandlers()
