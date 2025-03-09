@@ -385,22 +385,48 @@ end
 exports('UpdatePlayerAppearance', Core.Functions.UpdatePlayerAppearance)
 
 
-function Core.Functions.DeleteCharacter(identifier, slot, source, cb)
-    if not identifier then
-        print("^1Error: No identifier provided for deletion^7")
-        if cb then cb(false, "No identifier provided") end
+function Core.Functions.DeleteCharacter(citizenid, src, cb) -- can delete by EITHER cid OR source
+    if not citizenid and not src then
+        print("^1Error: No citizenid or source provided for deletion^7")
+        if cb then cb(false, "No citizenid or source provided") end
         return
     end
 
-    MySQL.Async.execute('DELETE FROM characters WHERE identifier = @identifier AND char_slot = @slot', {
-        ['@identifier'] = identifier,
-        ['@slot'] = slot
+    local player
+    if citizenid then
+        player = Core.Functions.GetPlayerByCitizenId(citizenid)
+        src = player?.source
+    else
+        player = Core.Functions.GetPlayer(src)
+        citizenid = player?.citizenid
+        if not citizenid then
+            print("^1Error: Unable to find char by source^7")
+            if cb then cb(false, "Unable to find char by source") end
+            return
+        end
+    end
+
+    -- drop player before deleting the character if online
+    if player then
+        local p = promise.new()
+        DropPlayer(src, "Character Deleted")
+
+        CreateThread(function() -- async thread with a little wait to make sure all resources handled the drop before deleting data
+            Wait(100)
+            p:resolve()
+        end)
+
+        Await(p)
+    end
+
+    MySQL.Async.execute('DELETE FROM characters WHERE citizenid = @cid', {
+        ['@cid'] = citizenid,
     }, function(rowsChanged)
         if rowsChanged > 0 then
-            print("^2Character deleted for slot:^7", slot)
+            print("^2Character deleted for citizenid:^7", citizenid)
             if cb then cb(true) end
         else
-            print("^1Failed to delete character for slot:^7", slot)
+            print("^1Failed to delete character for citizenid:^7", citizenid)
             if cb then cb(false, "Failed to delete character") end
         end
     end)
