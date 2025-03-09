@@ -1,3 +1,7 @@
+---@param source integer
+---@param amount number?
+---@param moneytype string
+---@return boolean success
 function Core.Functions.AddMoney(source, amount, moneytype)
     local Player = Core.Functions.GetPlayer(source)
     if not Player then
@@ -29,6 +33,10 @@ function Core.Functions.AddMoney(source, amount, moneytype)
     end
 end
 
+---@param source integer
+---@param amount number?
+---@param moneytype string
+---@return boolean success
 function Core.Functions.RemoveMoney(source, amount, moneytype)
     local Player = Core.Functions.GetPlayer(source)
     if not Player then
@@ -65,6 +73,10 @@ function Core.Functions.RemoveMoney(source, amount, moneytype)
     end
 end
 
+---@param source integer
+---@param target integer
+---@param amount number?
+---@return boolean success
 function Core.Functions.TransferMoney(source, target, amount)
     local sourcePlayer = Core.Functions.GetPlayer(source)
     local targetPlayer = Core.Functions.GetPlayer(target)
@@ -97,6 +109,9 @@ function Core.Functions.TransferMoney(source, target, amount)
     return false
 end
 
+---@param source integer
+---@param type string
+---@return boolean|number value false if failed, otherwise account balance as number
 function Core.Functions.GetMoney(source, type)
     local sourcePlayer = Core.Functions.GetPlayer(source)
 
@@ -140,6 +155,8 @@ CreateThread(function()
 end)
 
 ---- company funds
+---@param account string
+---@return number|boolean value false if failed, otherwise balance as number
 function Core.Functions.GetAccountMoney(account)
     if not account then
         return false
@@ -148,10 +165,14 @@ function Core.Functions.GetAccountMoney(account)
     if rs[1] then
         return rs[1].balance
     end
+    return false
 end
 
 exports('GetAccountMoney', Core.Functions.GetAccountMoney)
 
+---@param account string
+---@param amount number?
+---@return boolean|number value false if failed, otherwise balance as number
 function Core.Functions.AddAccountMoney(account, amount)
     if not account then
         return false
@@ -174,6 +195,9 @@ end
 
 exports('AddAccountMoney', Core.Functions.AddAccountMoney)
 
+---@param account string
+---@param amount number?
+---@return boolean|number value false if failed, otherwise balance as number
 function Core.Functions.RemoveAccountMoney(account, amount)
     if not account then
         return false

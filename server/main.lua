@@ -7,6 +7,7 @@ Core = {
     Shared = Shared
 }
 
+---@return table Core entire fucking core
 exports('GetCore', function()
     return Core
 end) -- kekw
@@ -14,6 +15,8 @@ end) -- kekw
 -- WE CAN DO  Core = exports["kCore"]:GetCore() but it's not recommended, use the exports for functions when possible.
 -- exports["kCore"]:GetPlayer(source) is better than Core.Functions.GetPlayer(source) when in external resources (while in same resource we can use Core. stuff.)
 
+---@param identifier string
+---@param cb fun(data: table)
 function Core.Functions.GetCharacterSlots(identifier, cb)
     MySQL.Async.fetchAll(
         'SELECT id, char_slot, citizenid, first_name, last_name, money, job, position, stats, appearance FROM characters WHERE identifier = @identifier',
@@ -48,6 +51,11 @@ function Core.Functions.GetCharacterSlots(identifier, cb)
 end
 exports('GetCharacterSlots', Core.Functions.GetCharacterSlots)
 
+---@param identifier string
+---@param slot integer
+---@param data table
+---@param source integer
+---@param cb fun(success: boolean, citizenid: string?)
 function Core.Functions.CreateCharacter(identifier, slot, data, source, cb)
     local citizenid = Core.Functions.GenerateUID()
     local defaultAppearance = {
@@ -106,6 +114,8 @@ function Core.Functions.CreateCharacter(identifier, slot, data, source, cb)
 end
 exports('CreateCharacter', Core.Functions.CreateCharacter)
 
+---@param source integer?
+---@return table? player
 function Core.Functions.GetPlayer(source)
     if not source then
         return nil
@@ -122,7 +132,8 @@ end
 
 exports('GetPlayer', Core.Functions.GetPlayer)
 
-
+---@param citizenid string
+---@return table? player
 function Core.Functions.GetPlayerByCitizenId(citizenid)
     if not citizenid then
         return nil
@@ -139,13 +150,17 @@ end
 
 exports('GetPlayerByCitizenId', Core.Functions.GetPlayerByCitizenId)
 
-
+---@return table players all players
 function Core.Functions.GetPlayers()
     return Core.Players
 end
 
 exports('GetPlayers', Core.Functions.GetPlayers)
 
+---@param source integer?
+---@param citizenid string
+---@param isNewCharacter boolean
+---@return boolean success
 function Core.Functions.LoadCharacter(source, citizenid, isNewCharacter)
     if not source or not citizenid then
         print("^1Error: Invalid source or citizenid in LoadCharacter^7")
@@ -300,8 +315,11 @@ function Core.Functions.LoadCharacter(source, citizenid, isNewCharacter)
             return false
         end
     end)
+    return true
 end
 
+---@param source integer
+---@return boolean success
 function SavePlayerData(source) -- rework eventually 
     local Player = Core.Functions.GetPlayer(source)
     if Player then
@@ -349,6 +367,10 @@ end
 
 exports('SavePlayerData', Core.Functions.SavePlayerData)
 
+---@param id integer
+---@param slot integer
+---@param source integer
+---@param cb function
 function Core.Functions.SelectCharacter(id, slot, source, cb)
     local identifier = GetPlayerIdentifier(source)
 
@@ -375,6 +397,9 @@ end
 
 exports('SelectCharacter', Core.Functions.SelectCharacter)
 
+---@param source integer
+---@param AppearanceData table
+---@return boolean success
 function Core.Functions.UpdatePlayerAppearance(source, AppearanceData)
     local Player = Core.Functions.GetPlayer(source)
     if Player then
@@ -384,7 +409,9 @@ function Core.Functions.UpdatePlayerAppearance(source, AppearanceData)
 end
 exports('UpdatePlayerAppearance', Core.Functions.UpdatePlayerAppearance)
 
-
+---@param citizenid string
+---@param src integer
+---@param cb fun(success: boolean, err: string?)
 function Core.Functions.DeleteCharacter(citizenid, src, cb) -- can delete by EITHER cid OR source
     if not citizenid and not src then
         print("^1Error: No citizenid or source provided for deletion^7")
@@ -395,14 +422,18 @@ function Core.Functions.DeleteCharacter(citizenid, src, cb) -- can delete by EIT
     local player
     if citizenid then
         player = Core.Functions.GetPlayerByCitizenId(citizenid)
-        src = player?.source
+        if player then
+            src = player.source
+        end
     else
         player = Core.Functions.GetPlayer(src)
-        citizenid = player?.citizenid
-        if not citizenid then
-            print("^1Error: Unable to find char by source^7")
-            if cb then cb(false, "Unable to find char by source") end
-            return
+        if player then
+            citizenid = player.citizenid
+            if not citizenid then
+                print("^1Error: Unable to find char by source^7")
+                if cb then cb(false, "Unable to find char by source") end
+                return
+            end
         end
     end
 
@@ -446,6 +477,8 @@ AddEventHandler('playerDropped', function()
     end
 end)
 
+---@param source integer
+---@return boolean IsInitialized
 function Core.Functions.IsPlayerInitialized(source)
     return Core.Players[source] ~= nil
 end

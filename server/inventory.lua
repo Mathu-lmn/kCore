@@ -3,11 +3,18 @@ GroundInventories = {} -- keep within core, pr if needed
 vehicleInventories = {}
 local inventoryViewers = {}
 
+---@param itemName string
+---@param cb fun(source: integer, item: table, slot: table)
 function Core.Functions.CreateUseableItem(itemName, cb)
     Core.UsableItems[itemName] = cb
 end
 exports('CreateUseableItem', Core.Functions.CreateUseableItem)
 
+---@param source integer
+---@param itemName string
+---@param amount integer?
+---@param metadata table?
+---@return boolean success
 function Core.Functions.AddItem(source, itemName, amount, metadata)
     local Player = Core.Functions.GetPlayer(source)
     if not Player then
@@ -128,6 +135,11 @@ end
 
 exports('AddItem', Core.Functions.AddItem)
 
+---@param source integer
+---@param itemName string
+---@param amount integer?
+---@param slot table?
+---@return boolean success
 function Core.Functions.RemoveItem(source, itemName, amount, slot)
     local Player = Core.Functions.GetPlayer(source)
     if not Player then
@@ -166,6 +178,10 @@ end
 
 exports('RemoveItem', Core.Functions.RemoveItem)
 
+---@param source integer
+---@param slot table
+---@param metadata table
+---@return boolean success
 function Core.Functions.UpdateItemMetadata(source, slot, metadata)
     local Player = Core.Functions.GetPlayer(source)
     if not Player then
@@ -184,7 +200,9 @@ end
 
 exports('UpdateItemMetadata', Core.Functions.UpdateItemMetadata)
 
-
+---@param src integer
+---@param id integer
+---@return table? GroundInventory the inv that was just created
 function Core.Functions.CreateGroundInventory(src, id)
     if not id then return nil end
     
@@ -207,6 +225,8 @@ end
 
 exports('CreateGroundInventory', Core.Functions.CreateGroundInventory)
 
+---@param id integer
+---@return table? GroundInventory the inventory or nil
 function Core.Functions.GetInventoryById(id)
     if not id then return nil end
     return GroundInventories[id]
@@ -214,6 +234,9 @@ end
 
 exports('GetInventoryById', Core.Functions.GetInventoryById)
 
+---@param inventoryId integer
+---@param label string?
+---@return table? VehicleInventory
 function Core.Functions.GetVehicleInventory(inventoryId, label)
     if not vehicleInventories[inventoryId] then
         vehicleInventories[inventoryId] = {
@@ -230,7 +253,12 @@ end
 
 exports('GetVehicleInventory', Core.Functions.GetVehicleInventory)
 
-
+---@param src integer
+---@param item table
+---@param sourceId integer
+---@param targetId integer
+---@return boolean success
+---@return table? responseData
 function Core.Functions.MoveInventoryItem(src, item, sourceId, targetId)
     local Player = Core.Functions.GetPlayer(src)
     if not Player then return false end
@@ -560,6 +588,8 @@ end
 
 exports('SplitInventoryItem', Core.Functions.SplitInventoryItem)
 
+---@param item table
+---@param slot table
 RegisterNetEvent('kCore:useItem', function(item, slot)
     local src = source
     local Player = Core.Functions.GetPlayer(src)
@@ -594,6 +624,8 @@ RegisterNetEvent('kCore:useItem', function(item, slot)
     Core.UsableItems[item.name](src, item, slot)
 end)
 
+---@param slot table
+---@param metadata table
 RegisterNetEvent('kCore:updateItemMetadata', function(slot, metadata)
     Core.Functions.UpdateItemMetadata(source, slot, metadata)
 end)
@@ -605,13 +637,18 @@ AddEventHandler('playerDropped', function()
     end
 end)
 
+---@param source integer
+---@param item table
+---@param slot table
 Core.Functions.CreateUseableItem("water", function(source, item, slot)
     if Core.Functions.RemoveItem(source, item.name, 1, slot) then
         TriggerClientEvent('kCore:drink', source, item)
     end
 end)
 
-
+---@param invId integer|string
+---@param inventory table
+---@return boolean success
 function Core.Functions.SaveVehicleInventory(invId, inventory)
     if not invId then return false end
     
@@ -637,6 +674,7 @@ end
 
 exports('SaveVehicleInventory', Core.Functions.SaveVehicleInventory)
 
+---@param invId integer
 function Core.Functions.LoadVehicleInventory(invId)
     if not plate then return nil end
     
@@ -659,7 +697,8 @@ end
 
 exports('LoadVehicleInventory', Core.Functions.LoadVehicleInventory)
 
-
+---@param inventoryId integer
+---@param playerId integer
 function Core.Functions.AddInventoryViewer(inventoryId, playerId)
     if not inventoryViewers[inventoryId] then
         inventoryViewers[inventoryId] = {}
@@ -670,6 +709,8 @@ end
 
 exports('AddInventoryViewer', Core.Functions.AddInventoryViewer)
 
+---@param inventoryId integer
+---@param playerId integer
 function Core.Functions.RemoveInventoryViewer(inventoryId, playerId)
     if inventoryViewers[inventoryId] then
         inventoryViewers[inventoryId][playerId] = nil
@@ -682,6 +723,8 @@ end
 
 exports('RemoveInventoryViewer', Core.Functions.RemoveInventoryViewer)
 
+---@param inventoryId integer|string
+---@return table
 function Core.Functions.GetInventoryViewers(inventoryId)
     return inventoryViewers[inventoryId] or {}
 end

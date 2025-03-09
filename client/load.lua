@@ -1,3 +1,4 @@
+---@param charData table
 local function LoadCharacterAppearance(charData)
     local ped = PlayerPedId()
     if charData and charData.Appearance then
@@ -41,11 +42,14 @@ local function LoadCharacterAppearance(charData)
     end
 end
 
+---@param data table player data
 RegisterNetEvent('kCore:updateData', function(data)
     Core.Player = data
     print(json.encode(data) .. ' FUCKING DATA')
 end)
 
+---@param data table player data
+---@param isNew boolean was the char just created?
 RegisterNetEvent('kCore:loadPlayer', function(data, isNew)
     Core.Player = data
 
@@ -65,6 +69,7 @@ RegisterNetEvent('kCore:loadPlayer', function(data, isNew)
     DiscordStatus()
 end)
 
+---@param AppearanceData table
 RegisterNetEvent('refreshAppearance', function(AppearanceData)
     if AppearanceData then
         local ped = PlayerPedId()

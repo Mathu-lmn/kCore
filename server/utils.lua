@@ -1,5 +1,6 @@
 math.randomseed(os.time())
 
+---@return string uid
 function Core.Functions.GenerateUID()
     local template = "KC%d%d%d%d%d%d"
 

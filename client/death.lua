@@ -4,7 +4,8 @@ local holdStartTime = 0
 
 
 -- this whole system should probably be changed, we will need a death anim and stuff instead of funky ah ragdolls so if someone would like to do that, go for it <3
-
+---@param event string name of the game Event
+---@param data table data from the game event
 AddEventHandler('gameEventTriggered', function(event, data)
     if event == 'CEventNetworkEntityDamage' then
         local victim, attacker, victimDied, weapon = data[1], data[2], data[4], data[7]
@@ -18,6 +19,7 @@ AddEventHandler('gameEventTriggered', function(event, data)
 end)
 
 
+---@param state boolean is player dead or alive
 function IsDead(state)
     isDead = state
     

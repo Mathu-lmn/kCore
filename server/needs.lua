@@ -5,6 +5,7 @@ local CRITICAL_THRESHOLD = 90
 local DAMAGE_INTERVAL = 1000
 local DAMAGE_AMOUNT = 2
 
+---@param source integer
 function Core.Stats.UpdateNeeds(source)
     local Player = Core.Functions.GetPlayer(source)
     if not Player or not Player.Stats then
@@ -19,6 +20,10 @@ function Core.Stats.UpdateNeeds(source)
     Player.Functions.Save()
 end
 
+---@param source integer
+---@param statName string
+---@param amount number
+---@return boolean success
 function Core.Stats.UpdateStat(source, statName, amount)
     local Player = Core.Functions.GetPlayer(source) -- should be rewritten to use player 
     if not Player or not Player.Stats then
@@ -47,11 +52,15 @@ CreateThread(function()
     end
 end)
 
+---@param source integer
+---@return boolean?
 function Core.Stats.AreNeedsInitialized(source)
     local Player = Core.Functions.GetPlayer(source)
     return Player and Player.Stats and Player.Stats.hunger ~= nil and Player.Stats.thirst ~= nil
 end
 
+---@param item table
+---@return boolean?
 RegisterNetEvent('kCore:updateStats', function(item)
     local Player = Core.Functions.GetPlayer(source)
     if not Player or not Player.Stats then

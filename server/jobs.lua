@@ -1,4 +1,8 @@
-
+---@param jobName string
+---@param label string
+---@param config table
+---@param override boolean
+---@return table? job
 function Core.Functions.CreateJob(jobName, label, config, override)
     if not jobName or not label then
         return error('nojobName')
@@ -49,6 +53,10 @@ function Core.Functions.CreateJob(jobName, label, config, override)
 end
 exports('CreateJob', Core.Functions.CreateJob)
 
+---@param source integer
+---@param job string
+---@param grade integer
+---@return boolean success
 function Core.Functions.SetPlayerJob(source, job, grade)
     local Player = Core.Functions.GetPlayer(source)
     if not Player then
@@ -77,6 +85,8 @@ function Core.Functions.SetPlayerJob(source, job, grade)
 end
 exports('SetPlayerJob', Core.Functions.SetPlayerJob)
 
+---@param job string
+---@return boolean|table value job data or false if failed
 function Core.Functions.GetJob(job)
     if not Shared.Jobs[job] then
         print("^1Error: Job does not exist^7: " .. job .. "^7")
@@ -87,6 +97,8 @@ function Core.Functions.GetJob(job)
 end
 exports('GetJob', Core.Functions.GetJob)
 
+---@param source integer
+---@return boolean|table value job data or false if failed
 function Core.Functions.GetPlayerJob(source)
     local Player = Core.Functions.GetPlayer(source)
     if not Player then
@@ -97,6 +109,7 @@ function Core.Functions.GetPlayerJob(source)
 end
 exports('GetPlayerJob', Core.Functions.GetPlayerJob)
 
+---@return table jobs
 function Core.Functions.GetAllJobs()
     return Shared.Jobs
 end

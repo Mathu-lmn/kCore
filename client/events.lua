@@ -1,3 +1,5 @@
+---@param newHunger number
+---@param newThirst number
 RegisterNetEvent('kCore:updateNeeds', function(newHunger, newThirst)
     Core.Player.Stats.hunger = newHunger
     Core.Player.Stats.thirst = newThirst
@@ -11,6 +13,7 @@ RegisterNetEvent('kCore:updateNeeds', function(newHunger, newThirst)
     })
 end)
 
+---@param moneyData {cash: number, bank: number} https://kco.re/docs/kCore/PlayerObject#money for reference/format
 RegisterNetEvent('kCore:updateMoney', function(moneyData)
     Core.Player.Money = moneyData
     exports["kNotify"]:Notify({
@@ -23,6 +26,7 @@ RegisterNetEvent('kCore:updateMoney', function(moneyData)
     })
 end)
 
+---@param item table item data
 RegisterNetEvent('kCore:drink', function(item)
     exports['kCore']:StartProgress({
         duration = 3000,
@@ -33,6 +37,7 @@ RegisterNetEvent('kCore:drink', function(item)
     end)
 end)
 
+---@param message string message to show in the notification
 RegisterNetEvent('kCore:notification', function(message)
     exports['kNotify']:Notify({
         type = "information",
@@ -44,7 +49,7 @@ RegisterNetEvent('kCore:notification', function(message)
     })
 end)
 
-
+---@param jobs table
 RegisterNetEvent('kCore:syncJobs', function(jobs)
     Shared.Jobs = jobs
 end)

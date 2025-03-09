@@ -1,15 +1,19 @@
+---@return table Core.Player Player object
 function Core.Functions.GetPlayer()
     return Core.Player
 end
 
+---@return {cash: number, bank: number} Core.Player.Money https://kco.re/docs/kCore/PlayerObject#money
 function Core.Functions.GetPlayerMoney()
     return Core.Player.Money
 end
 
+---@return {thirst: number, hunger: number}
 function Core.Functions.GetPlayerStats()
     return Core.Player.Stats
 end
 
+---@return boolean? IsLoaded is the player loaded in
 function Core.Functions.IsPlayerLoaded()
     return Core.Player.IsLoaded
 end
@@ -39,3 +43,4 @@ end)
 AddStateBagChangeHandler('maxClients', 'global', function(bagName, key, value, reserved, replicated)
     DiscordStatus()
 end)
+
