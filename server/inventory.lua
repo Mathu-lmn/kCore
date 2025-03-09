@@ -205,7 +205,7 @@ exports('UpdateItemMetadata', Core.Functions.UpdateItemMetadata)
 ---@return table? GroundInventory the inv that was just created
 function Core.Functions.CreateGroundInventory(src, id)
     if not id then return nil end
-    
+
     if not GroundInventories[id] then
         GroundInventories[id] = {
             id = id,
@@ -219,7 +219,7 @@ function Core.Functions.CreateGroundInventory(src, id)
             }
         }
     end
-    
+
     return GroundInventories[id]
 end
 
@@ -249,7 +249,7 @@ function Core.Functions.GetVehicleInventory(inventoryId, label)
         }
     end
     return vehicleInventories[inventoryId]
-end 
+end
 
 exports('GetVehicleInventory', Core.Functions.GetVehicleInventory)
 
@@ -329,12 +329,12 @@ function Core.Functions.MoveInventoryItem(src, item, sourceId, targetId)
         end
     end
 
-    
+
     if sourceId:match('^ground_') and #sourceInv.items == 0 then
         GroundInventories[sourceId] = nil
     end
 
- 
+
     if sourceId == 'player' or targetId == 'player' then
         Player.Functions.UpdateInventory(Player.Inventory)
     end
@@ -344,13 +344,13 @@ function Core.Functions.MoveInventoryItem(src, item, sourceId, targetId)
         vehicleInventories[sourceId] = sourceInv
         Core.Functions.SaveVehicleInventory(sourceId, sourceInv)
     end
-    
+
     if targetId:match('^veh_') then
         vehicleInventories[targetId] = targetInv
         print(sourceId, targetId,'PLUH')
         Core.Functions.SaveVehicleInventory(targetId, targetInv)
     end
-   
+
     if sourceId:match('^ground_') and GroundInventories[sourceId] then
         for viewerId in pairs(sourceInv.viewers) do
             if viewerId  then
@@ -380,7 +380,7 @@ function Core.Functions.MoveInventoryItem(src, item, sourceId, targetId)
             end
         end
     end
-    
+
 
     if (targetId:match('^veh_') or targetId:match('^ground_')) and targetId ~= sourceId then
         local viewers = Core.Functions.GetInventoryViewers(targetId)
@@ -651,15 +651,13 @@ end)
 ---@return boolean success
 function Core.Functions.SaveVehicleInventory(invId, inventory)
     if not invId then return false end
-    
 
-    
     local inventoryData = json.encode({
         items = inventory.items,
         rows = inventory.rows,
         columns = inventory.columns
     })
-    
+
     MySQL.Async.execute('INSERT INTO vehicle_inventories (plate, inventory) VALUES (?, ?) ON DUPLICATE KEY UPDATE inventory = ?',
         {invId, inventoryData, inventoryData},
         function(rowsChanged)
@@ -668,7 +666,7 @@ function Core.Functions.SaveVehicleInventory(invId, inventory)
             end
         end
     )
-    
+
     return true
 end
 
@@ -677,10 +675,9 @@ exports('SaveVehicleInventory', Core.Functions.SaveVehicleInventory)
 ---@param invId integer
 function Core.Functions.LoadVehicleInventory(invId)
     if not plate then return nil end
-    
-    
+
     local promise = promise.new()
-    
+
     MySQL.Async.fetchAll('SELECT inventory FROM vehicle_inventories WHERE plate = ?', {invId},
         function(result)
             if result and result[1] then
@@ -691,7 +688,7 @@ function Core.Functions.LoadVehicleInventory(invId)
             end
         end
     )
-    
+
     return Citizen.Await(promise)
 end
 
@@ -714,7 +711,7 @@ exports('AddInventoryViewer', Core.Functions.AddInventoryViewer)
 function Core.Functions.RemoveInventoryViewer(inventoryId, playerId)
     if inventoryViewers[inventoryId] then
         inventoryViewers[inventoryId][playerId] = nil
-   
+
         if not next(inventoryViewers[inventoryId]) then
             inventoryViewers[inventoryId] = nil
         end

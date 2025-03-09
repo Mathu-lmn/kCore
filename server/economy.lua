@@ -145,7 +145,7 @@ CreateThread(function()
     end
     while true do
         Wait(Config.PaycheckInterval)
-        for k, v in pairs(GetPlayers()) do
+        for _, v in pairs(GetPlayers()) do
             local Player = Core.Functions.GetPlayer(v)
             if Player then
                 Core.Functions.AddMoney(v, v.Job.salary, 'bank')

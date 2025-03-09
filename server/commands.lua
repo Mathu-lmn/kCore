@@ -148,7 +148,7 @@ RegisterCommand('createPolice', function(source)
             salary = 2000,
             rank = 3
         }}
-    }, true) 
+    }, true)
 
     TriggerClientEvent('kCore:debugJob', source)
 end)

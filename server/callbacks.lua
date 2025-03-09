@@ -38,7 +38,7 @@ RegisterNetEvent('kCore:triggerCallback', function(name, requestId, ...)
         source = source,
         time = currentTime
     }
-    
+
     callbackfn(source, function(...)
         if CallbackRequests[requestId] and CallbackRequests[requestId].source == source then
             TriggerClientEvent('kCore:callbackResponse', source, requestId, ...)

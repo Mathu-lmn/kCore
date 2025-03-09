@@ -13,7 +13,7 @@ function Core.Functions.CreateJob(jobName, label, config, override)
     end
 
     if Shared.Jobs[jobName] and not override then
-        return Shared.Jobs[jobName] 
+        return Shared.Jobs[jobName]
     end
 
     local job = {

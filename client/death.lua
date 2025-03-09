@@ -22,11 +22,11 @@ end)
 ---@param state boolean is player dead or alive
 function IsDead(state)
     isDead = state
-    
+
     if state then
         local timer = deathTime
         exports['kHUD']:UpdateDeathState(isDead, timer)
-        
+
         CreateThread(function()
             while isDead and timer > 0 do
                 Wait(1000)
@@ -58,14 +58,14 @@ end
 -- function ReviveUser()
 --     local playerPed = PlayerPedId()
 --     local pos = GetEntityCoords(playerPed, true)
-    
+
 --     exports['kHUD']:UpdateRespawnProgress(0)
 --     exports['kHUD']:UpdateCanRespawn(false)
-    
+
 --     NetworkResurrectLocalPlayer(pos.x, pos.y, pos.z, GetEntityHeading(playerPed), true, false)
 --     SetEntityHealth(playerPed, 200) -- Fixed: was using 'player' instead of 'playerPed'
 --     ClearPedBloodDamage(playerPed) -- Fixed: was using 'player' instead of 'playerPed'
-    
+
 --     isDead = false
 --     holdStartTime = 0
 --     exports['kHUD']:UpdateDeathState(isDead, 0)

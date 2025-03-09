@@ -47,7 +47,8 @@ function Core.Functions.GetCharacterSlots(identifier, cb)
                 maxSlots = Config.MaxCharacterSlots,
                 autoload = Config.AutoloadChar
             })
-        end)
+        end
+    )
 end
 exports('GetCharacterSlots', Core.Functions.GetCharacterSlots)
 
