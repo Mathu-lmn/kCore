@@ -1,6 +1,8 @@
 local activeProgress = nil
 local activeCallback = nil
 
+---@param data table
+---@param cb fun(data: {status: string, message?: string})
 RegisterNUICallback('progressComplete', function(data, cb)
     if not activeProgress then
         cb({
@@ -23,6 +25,8 @@ RegisterNUICallback('progressComplete', function(data, cb)
     })
 end)
 
+---@param options {duration: number, label: string, color?: string}
+---@param cb function
 local function StartProgress(options, cb)
     if activeProgress then
         SendNUIMessage({
@@ -44,6 +48,7 @@ local function StartProgress(options, cb)
     })
 end
 
+---@return boolean success returns false if no active progressbar
 local function CancelProgress()
     if not activeProgress then
         return false

@@ -1,5 +1,7 @@
 -- commands don't have permissions checks this early on
 
+---@param source integer
+---@param args string[]
 RegisterCommand('addmoney', function(source, args)
     if source ~= 0 and not Core.Functions.HasPermission(source, "command.money") then
         TriggerClientEvent('chat:addMessage', source, {
@@ -46,6 +48,8 @@ RegisterCommand('addmoney', function(source, args)
     end
 end, false)
 
+---@param source integer
+---@param args string[]
 RegisterCommand('removemoney', function(source, args)
     if source ~= 0 and not Core.Functions.HasPermission(source, "command.money") then
         TriggerClientEvent('chat:addMessage', source, {
@@ -94,6 +98,7 @@ RegisterCommand('removemoney', function(source, args)
     end
 end, false)
 
+---@param source integer
 RegisterCommand('checkmoneystate', function(source)
     if source ~= 0 and not Core.Functions.HasPermission(source, "command.money") then
         TriggerClientEvent('chat:addMessage', source, {
@@ -119,7 +124,8 @@ RegisterCommand('checkmoneystate', function(source)
     end
 end)
 
-RegisterCommand('createPolice', function(source, args)
+---@param source integer
+RegisterCommand('createPolice', function(source)
     if source ~= 0 and not Core.Functions.HasPermission(source, "command.jobs") then
         TriggerClientEvent('chat:addMessage', source, {
             color = {255, 0, 0},
@@ -142,12 +148,13 @@ RegisterCommand('createPolice', function(source, args)
             salary = 2000,
             rank = 3
         }}
-    }, true) 
+    }, true)
 
     TriggerClientEvent('kCore:debugJob', source)
 end)
 
-RegisterCommand('createFire', function(source, args)
+---@param source integer
+RegisterCommand('createFire', function(source)
     if source ~= 0 and not Core.Functions.HasPermission(source, "command.jobs") then
         TriggerClientEvent('chat:addMessage', source, {
             color = {255, 0, 0},
@@ -175,6 +182,8 @@ RegisterCommand('createFire', function(source, args)
     TriggerClientEvent('kCore:debugJob', source)
 end)
 
+---@param source integer
+---@param args string[]
 RegisterCommand('setjob', function(source, args)
     if source ~= 0 and not Core.Functions.HasPermission(source, "command.jobs") then
         TriggerClientEvent('chat:addMessage', source, {
@@ -223,6 +232,8 @@ RegisterCommand('setjob', function(source, args)
     end
 end, false)
 
+---@param source integer
+---@param args string[]
 RegisterCommand('ground', function(source, args)
     local src = source
     local groundId = args[1]
@@ -243,7 +254,7 @@ RegisterCommand('ground', function(source, args)
         groundId = 'ground_' .. groundId
     end
 
-    local groundInv = Core.Functions.GetInventoryById(groundId)
+    local groundInv? = Core.Functions.GetInventoryById(groundId)
     groundInv.viewers[src] = true
 
     local inventoryData = {{

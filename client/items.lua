@@ -1,5 +1,6 @@
 local currentWeapon = nil
 
+---@param weaponData table
 RegisterNetEvent('kCore:equipWeapon', function(weaponData)
     local playerPed = PlayerPedId()
     local weaponHash = weaponData.weaponHash
@@ -14,11 +15,12 @@ RegisterNetEvent('kCore:equipWeapon', function(weaponData)
     currentWeapon = weaponData
 end)
 
+---@param weaponHash string
 RegisterNetEvent('kCore:saveWeaponMetadata', function(weaponHash)
     if currentWeapon and currentWeapon.slot then
         local currentAmmo = GetAmmoInPedWeapon(PlayerPedId(), weaponHash)
 
-        local Player = Core.Functions.GetPlayer(src)
+        local Player? = Core.Functions.GetPlayer()
         local currentItem
 
         for _, item in ipairs(Player.Inventory.items) do
@@ -37,6 +39,7 @@ RegisterNetEvent('kCore:saveWeaponMetadata', function(weaponHash)
     end
 end)
 
+---@param newAmmo integer
 RegisterNetEvent('kCore:updateWeaponAmmo', function(newAmmo)
     if currentWeapon then
         SetPedAmmo(PlayerPedId(), currentWeapon.weaponHash, newAmmo)
@@ -46,12 +49,14 @@ RegisterNetEvent('kCore:updateWeaponAmmo', function(newAmmo)
     end
 end)
 
+---@param weaponHash string
 RegisterNetEvent('kCore:removeWeapon', function(weaponHash)
     local playerPed = PlayerPedId()
     RemoveWeaponFromPed(playerPed, weaponHash)
     currentWeapon = nil
 end)
 
+---@param ammoData table
 RegisterNetEvent('kCore:useAmmo', function(ammoData)
     local playerPed = PlayerPedId()
 

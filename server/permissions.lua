@@ -1,6 +1,9 @@
+---@param source integer?
+---@param permission string
+---@return boolean allowed
 function Core.Functions.HasPermission(source, permission)
     if not source or not permission then return false end
-    
+
     source = tonumber(source)
     if not source then return false end
 

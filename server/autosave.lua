@@ -10,10 +10,13 @@ local tostring = tostring
 local pcall = pcall
 local print = print
 
+---@return string|osdate date 
 local function GetTimestamp()
     return os_date("%Y-%m-%d %H:%M:%S")
 end
 
+---@param number number the number to format
+---@return string formattedNumber
 local function FormatNumber(number)
     local formatted = tostring(number)
     local k

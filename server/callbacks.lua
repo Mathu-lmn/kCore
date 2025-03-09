@@ -1,12 +1,17 @@
 Callbacks = {}
 CallbackRequests = {}
 
+---@param name string
+---@param cb function
 Core.Functions.RegisterServerCallback = function(name, cb)
     local resource = GetInvokingResource()
     if not resource then return end
     Callbacks[name] = cb
 end
 
+---@param name string
+---@param requestId integer
+---@param ... any
 RegisterNetEvent('kCore:triggerCallback', function(name, requestId, ...)
     local source = source
 
@@ -33,7 +38,7 @@ RegisterNetEvent('kCore:triggerCallback', function(name, requestId, ...)
         source = source,
         time = currentTime
     }
-    
+
     callbackfn(source, function(...)
         if CallbackRequests[requestId] and CallbackRequests[requestId].source == source then
             TriggerClientEvent('kCore:callbackResponse', source, requestId, ...)

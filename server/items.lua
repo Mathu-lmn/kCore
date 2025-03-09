@@ -64,11 +64,14 @@ local function RegisterAmmoHandlers()
     end
 end
 
+---@param ammoData table
+---@param weaponSlot table
+---@param currentAmmo integer
 RegisterNetEvent('kCore:ammoUsed', function(ammoData, weaponSlot, currentAmmo)
     local src = source
 
     if Core.Functions.RemoveItem(src, ammoData.name, 1, ammoData.slot) then
-        local Player = Core.Functions.GetPlayer(src)
+        local Player? = Core.Functions.GetPlayer(src)
         local currentItem
 
         for _, item in ipairs(Player.Inventory.items) do
@@ -88,6 +91,7 @@ RegisterNetEvent('kCore:ammoUsed', function(ammoData, weaponSlot, currentAmmo)
     end
 end)
 
+---@param newAmmo integer
 RegisterNetEvent('kCore:updateWeaponAmmo', function(newAmmo)
     if currentWeapon then
         SetPedAmmo(PlayerPedId(), currentWeapon.weaponHash, newAmmo)
