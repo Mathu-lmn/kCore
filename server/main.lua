@@ -385,11 +385,27 @@ end
 exports('UpdatePlayerAppearance', Core.Functions.UpdatePlayerAppearance)
 
 
-function Core.Functions.DeleteCharacter(identifier, slot, source, cb)
+function Core.Functions.DeleteCharacter(identifier, slot, src, cb)
     if not identifier then
         print("^1Error: No identifier provided for deletion^7")
         if cb then cb(false, "No identifier provided") end
         return
+    end
+
+    -- drop player before deleting the character if online
+    local player = Core.Functions.GetPlayer(src)
+    if player then
+        if Player.citizenid == identifier then
+            local p = promise.new()
+            DropPlayer(src, "Character Deleted")
+
+            CreateThread(function() -- async thread with a little wait to make sure all resources handled the drop before deleting data
+                Wait(100)
+                p:resolve()
+            end)
+
+            Await(p)
+        end
     end
 
     MySQL.Async.execute('DELETE FROM characters WHERE identifier = @identifier AND char_slot = @slot', {
